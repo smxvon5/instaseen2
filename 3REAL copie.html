@@ -1,0 +1,854 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Instaseen — Données</title>
+  <meta name="description" content="Tableau de bord Instaseen — aperçu des données publiques et stories à la une">
+  <style>
+    /* ==============================================================
+       Theme variables & reset
+       ============================================================== */
+    :root{
+      --bg:#050007;
+      --muted:rgba(234,242,255,0.66);
+      --accent:#c9a8ff;
+      --glass:rgba(255,255,255,0.04);
+      --card:#0f0f12;
+      --success:#7de3b6;
+      --danger:#ff7a9b;
+      --radius:14px;
+      --max-width:1200px;
+    }
+
+    /* Reset */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      background:var(--bg);
+      color:#fff;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      min-height:100vh;
+      line-height:1.45;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'><defs><filter id='n' x='-50%' y='-50%' width='200%' height='200%'><feTurbulence baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/><feBlend mode='overlay'/></filter></defs><rect width='120' height='120' fill='%23050007' filter='url(%23n)' opacity='0.03'/></svg>");
+      background-size: 600px 600px;
+    }
+
+    /* Background halos */
+    .bg{position:fixed;inset:0;overflow:hidden;z-index:0;pointer-events:none}
+    .circle{position:absolute;border-radius:50%;filter:blur(180px);opacity:0.06;animation:move 28s infinite alternate ease-in-out;will-change:transform}
+    .circle1{width:920px;height:920px;background:#4c1d8f;top:-360px;left:-260px}
+    .circle2{width:760px;height:760px;background:#6b3ee6;bottom:-240px;right:-200px;animation-delay:4s;opacity:0.05}
+    .circle3{width:640px;height:640px;background:#8b5cf6;top:40%;left:48%;animation-delay:8s;opacity:0.04}
+    .circle4{width:480px;height:480px;background:#5b21b6;top:10%;right:10%;opacity:0.03;filter:blur(220px);animation-delay:2s}
+    .circle5{width:360px;height:360px;background:#7c3aed;bottom:8%;left:8%;opacity:0.025;filter:blur(200px);animation-delay:6s}
+    @keyframes move{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-100px,80px) scale(1.05)}100%{transform:translate(100px,-80px) scale(0.95)}}
+
+    /* Container */
+    .container{
+      max-width:var(--max-width);
+      margin:0 auto;
+      padding:42px 26px;
+      position:relative;
+      z-index:1;
+    }
+
+    /* Header */
+    header.site-header{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:12px;
+      text-align:center;
+      margin-bottom:22px;
+      padding:18px;
+      border-radius:16px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015));
+      border:1px solid var(--glass);
+      box-shadow:0 18px 60px rgba(0,0,0,0.6);
+      backdrop-filter: blur(6px) saturate(120%);
+    }
+    header .title{
+      font-size:34px;
+      font-weight:800;
+      letter-spacing:-0.02em;
+      background:linear-gradient(90deg,#c9a8ff 0%,#7e00ff 60%);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+    header .subtitle{color:var(--muted);font-size:14px}
+
+    /* Topbar + mini-cards */
+    .topbar{display:flex;align-items:center;justify-content:center;gap:18px;flex-wrap:wrap;margin:18px 0}
+    .cards-row{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;width:100%}
+    .mini-card{
+      background:linear-gradient(180deg, rgba(255,255,255,0.015), transparent);
+      border:1px solid var(--glass);
+      padding:14px;
+      border-radius:12px;
+      min-width:150px;flex:1 1 200px;max-width:220px;
+      display:flex;flex-direction:column;align-items:center;gap:8px;
+      box-shadow:0 8px 30px rgba(0,0,0,0.6);
+      transition:transform .22s ease,box-shadow .22s ease;
+      cursor:pointer;text-align:center;
+      position:relative;
+      overflow:hidden;
+    }
+    .mini-card::after{content:'';position:absolute;inset:0;background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><rect width='40' height='40' fill='none'/><circle cx='2' cy='2' r='0.7' fill='rgba(255,255,255,0.02)' /></svg>");opacity:0.65;mix-blend-mode:overlay;pointer-events:none}
+    .mini-card:hover{transform:translateY(-8px) translateZ(8px);box-shadow:0 28px 90px rgba(0,0,0,0.7)}
+    .mini-card h4{font-size:15px;margin-top:2px}
+    .mini-card p{font-size:13px;color:var(--muted)}
+
+    /* Increased icon frame size as requested */
+    .icon-frame{width:86px;height:86px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.03);box-shadow:0 8px 18px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.02);margin-bottom:4px;position:relative;overflow:hidden}
+    .icon-frame::after{content:'';position:absolute;inset:0;background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'><rect width='20' height='20' fill='none'/><circle cx='1' cy='1' r='0.5' fill='rgba(255,255,255,0.02)' /></svg>");opacity:0.9;mix-blend-mode:overlay;pointer-events:none}
+    .icon-frame svg{width:44px;height:44px;display:block}
+    .icon-textured path{fill:url(#whiteTexture) !important;stroke: rgba(255,255,255,0.9);stroke-width:0.18;filter:drop-shadow(0 6px 14px rgba(0,0,0,0.45))}
+
+    .pay-area{display:flex;justify-content:center;margin-top:12px;width:100%}
+    .pay-btn{position:relative;display:inline-flex;align-items:center;gap:10px;background:linear-gradient(90deg,#b61aff 0%,#7e00ff 55%,#5600b3 100%);color:#fff;font-weight:900;border:none;padding:14px 28px;border-radius:20px;font-size:16px;cursor:pointer;box-shadow:0 12px 46px rgba(126,0,255,0.22)}
+    .pay-btn.pulse{animation:pulse 2.6s infinite}
+    @keyframes pulse{0%{box-shadow:0 0 18px rgba(126,0,255,0.28)}50%{box-shadow:0 0 38px rgba(126,0,255,0.62)}100%{box-shadow:0 0 18px rgba(126,0,255,0.28)}}
+
+    /* Toolbar */
+    .toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:22px 0;justify-content:space-between}
+    .filters{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center;flex:1}
+    .chip{background:rgba(255,255,255,0.02);padding:8px 10px;border-radius:12px;border:1px solid var(--glass);font-size:13px;color:var(--muted);cursor:pointer;user-select:none}
+    .chip.active{background:linear-gradient(90deg,#7b61ff,#a34dff);color:#fff;border-color:transparent;box-shadow:0 8px 24px rgba(123,97,255,0.12)}
+    .toolbar .count{min-width:140px;text-align:right;color:var(--muted);font-size:13px}
+
+    /* Sections */
+    .section{margin:28px 0;transform-style:preserve-3d}
+    .section .section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .section .section-title h3{font-size:18px;color:var(--accent);font-weight:800}
+
+    /* Messages list - 3D cards */
+    .messages{display:flex;flex-direction:column;gap:12px}
+    .msg{display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:12px;background:linear-gradient(145deg,#121214,#0b0b0d);border:1px solid rgba(255,255,255,0.02);box-shadow:6px 6px 18px rgba(0,0,0,0.6), -6px -6px 18px rgba(255,255,255,0.01);transition:transform .16s ease}
+    .msg:hover{transform:translateY(-6px)}
+    .avatar{width:56px;height:56px;border-radius:50%;overflow:hidden;flex-shrink:0;background:linear-gradient(135deg,#2b2b2b,#0f0f0f);display:grid;place-items:center;box-shadow:inset 0 1px 0 rgba(255,255,255,0.02)}
+    .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+    .msg-main{flex:1;display:flex;flex-direction:column;gap:6px}
+    .msg-meta{display:flex;justify-content:space-between;align-items:center;gap:8px}
+    .msg-meta .from{font-weight:700;display:flex;align-items:center;gap:8px}
+    .msg-body{color:var(--muted);font-size:14px}
+    .blurred{filter:blur(6px) brightness(0.78);background:linear-gradient(90deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));padding:6px;border-radius:8px;display:inline-block}
+    .username-blur{filter:blur(6px) brightness(0.78);background:linear-gradient(90deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));padding:2px 6px;border-radius:6px;display:inline-block}
+
+    /* downloadable-icon (non clickable) under time */
+    .download-icon {display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);margin-top:6px;user-select:none;opacity:0.95}
+    .download-icon svg{width:14px;height:14px;display:block;flex-shrink:0;filter:drop-shadow(0 6px 12px rgba(0,0,0,0.5))}
+
+    .btn-sm{padding:8px 10px;border-radius:10px;border:1px solid var(--glass);background:transparent;color:var(--muted);cursor:pointer;font-weight:600}
+
+    /* Stories grid */
+    .stories-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px;justify-items:center;align-items:center}
+    .story-card{width:120px;height:120px;border-radius:50%;overflow:hidden;position:relative;background:#0b0b0c;border:1px solid var(--glass);box-shadow:0 10px 30px rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center}
+    .story-card img{width:100%;height:100%;object-fit:cover;display:block;transition:filter .22s ease,transform .22s ease}
+    .story-card.locked img{filter:blur(10px) brightness(0.6)}
+    .story-card .padlock{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;display:grid;place-items:center;z-index:3;box-shadow:0 6px 20px rgba(91,33,182,0.18);background:radial-gradient(circle at 35% 30%, rgba(184,84,255,0.95), rgba(86,0,179,1));border:1px solid rgba(255,255,255,0.05);opacity:0.96}
+    .story-card.unlocked .padlock{opacity:0;transform:translate(-50%,-50%) scale(0.9)}
+
+    /* Recent searches */
+    .search-list{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+    .search-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:12px;background:linear-gradient(145deg,#1f1f1f,#151515);box-shadow:0 6px 12px rgba(0,0,0,0.35)}
+    .search-text{filter:blur(8px) brightness(0.78);background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.05));padding:6px 10px;border-radius:8px;display:inline-block}
+
+    footer{margin-top:40px;padding:20px 0;text-align:center;color:var(--muted);font-size:13px}
+
+    /* responsive */
+    @media (max-width:900px){.stories-grid{grid-template-columns:repeat(2,1fr)}.toolbar{flex-direction:column;align-items:stretch}.toolbar .count{text-align:left}}
+    @media (max-width:620px){.cards-row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stories-grid{grid-template-columns:repeat(2,1fr)}.container{padding:18px}}
+  </style>
+</head>
+<body>
+  <div class="bg" aria-hidden="true">
+    <div class="circle circle1"></div>
+    <div class="circle circle2"></div>
+    <div class="circle circle3"></div>
+    <div class="circle circle4"></div>
+    <div class="circle circle5"></div>
+  </div>
+
+  <div class="container" role="main">
+    <header class="site-header" role="banner">
+      <div style="display:flex;gap:12px;align-items:center;justify-content:center">
+        <svg viewBox="0 0 48 48" width="44" height="44" style="filter:drop-shadow(0 8px 28px rgba(0,0,0,0.6))">
+          <defs><linearGradient id="g-logo" x1="0" x2="1"><stop offset="0" stop-color="#b61aff"/><stop offset="1" stop-color="#5600b3"/></linearGradient></defs>
+          <rect width="48" height="48" rx="10" fill="url(#g-logo)"></rect>
+          <text x="50%" y="58%" dominant-baseline="middle" text-anchor="middle" font-size="20" font-weight="700" fill="#fff">IS</text>
+        </svg>
+      </div>
+    <h1 id="dashboardTitle">Tableau de bord</h1>
+      <p class="subtitle">Aperçu — données extraites</p>
+    </header>
+
+    <!-- Topbar -->
+    <div class="topbar" role="navigation" aria-label="Navigation rapide">
+      <div class="cards-row" role="list">
+        <div class="mini-card" role="listitem" aria-label="Messages" tabindex="0" data-action="goto-messages">
+          <div class="icon-frame" aria-hidden="true">
+            <svg class="icon-textured" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="whiteTexture" x1="0" x2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#f0f0f0"/></linearGradient></defs><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          </div>
+          <h4>Messages</h4><p>Conversations privées</p>
+        </div>
+        <div class="mini-card" role="listitem" aria-label="Profil" tabindex="0" data-action="goto-profile">
+          <div class="icon-frame" aria-hidden="true">
+            <svg class="icon-textured" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="whiteTexture2" x1="0" x2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#f0f0f0"/></linearGradient></defs><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8V22h19.2v-2.8c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+          </div>
+          <h4>Profil</h4><p>Infos utilisateur</p>
+        </div>
+        <div class="mini-card" role="listitem" aria-label="Publication" tabindex="0" data-action="goto-posts">
+          <div class="icon-frame" aria-hidden="true">
+            <svg class="icon-textured" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-8 14-4-5.33L9.67 10l3.33 4.44L16.33 11 21 17H11z"/></svg>
+          </div>
+          <h4>Publications</h4><p>Posts partagés</p>
+        </div>
+        <div class="mini-card" role="listitem" aria-label="Recherches" tabindex="0" data-action="goto-searches">
+          <div class="icon-frame" aria-hidden="true">
+            <svg class="icon-textured" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 17c-.83 0-1.5-.67-1.5-1.5S11.17 16 12 16s1.5.67 1.5 1.5S12.83 19 12 19zm1.07-7.75c-.9.92-1.07 1.25-1.07 2.25h-1.5v-.5c0-1.1.45-1.99 1.17-2.71.59-.59.93-1.38.93-2.29 0-1.65-1.35-3-3-3s-3 1.35-3 3H6c0-2.48 2.02-4.5 4.5-4.5S15 7.52 15 10c0 1.4-.56 2.27-1.93 3.25z"/></svg>
+          </div>
+          <h4>Recherches</h4><p>Recherches récentes</p>
+        </div>
+      </div>
+
+      <div class="pay-area" aria-hidden="false" style="flex-basis:100%;justify-content:center">
+        <button id="unlockBtn" class="pay-btn pulse" aria-label="Débloquer tout pour 2 euros">🔒 Tout débloquer — 2€</button>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar" role="region" aria-label="Filtres">
+      <div class="filters" role="toolbar" aria-label="Filtres">
+        <div class="chip active" data-filter="all">Tous</div>
+        <div class="chip" data-filter="friends">Amis</div>
+        <!-- Mention removed as requested -->
+        <div class="chip" data-filter="unread">Non lus</div>
+      </div>
+
+      <div class="count" aria-hidden="true">
+        <div style="font-size:13px;color:var(--muted)">Total messages</div>
+        <div style="font-weight:800;font-size:18px;margin-top:4px" id="totalCount">0</div>
+      </div>
+    </div>
+
+    <!-- Messages -->
+    <section class="section" aria-labelledby="messages-title">
+      <div class="section-title">
+        <h3 id="messages-title">Messages reçus</h3>
+        <div class="badge" id="listBadge" style="background:#0b0b0c;padding:6px 10px;border-radius:12px;border:1px solid var(--glass)">0</div>
+      </div>
+
+      <div class="messages" id="messagesContainer" aria-live="polite">
+        <!-- injected -->
+      </div>
+
+      <div style="margin-top:12px;color:var(--muted);font-size:13px">
+        <strong>Note :</strong> les aperçus sont volontairement floutés pour protéger la vie privée. Cliquez sur <em>Tout débloquer</em> pour avoir l'accès complet.
+      </div>
+    </section>
+
+    <!-- Stories -->
+    <section class="section" aria-labelledby="stories-title">
+      <div class="section-title">
+        <h3 id="stories-title">Story à la une</h3>
+      </div>
+
+      <div class="stories-grid" id="storiesGrid" aria-live="polite">
+        <!-- injected -->
+      </div>
+    </section>
+
+    <!-- Activity -->
+    <section class="section" aria-labelledby="activity-title">
+      <div class="section-title">
+        <h3 id="activity-title">Activité récente</h3>
+        <div style="color:var(--muted);font-size:13px">Flux des actions publiques</div>
+      </div>
+
+      <div class="activity-grid" style="margin-top:12px;display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
+        <div style="background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);padding:14px;border-radius:12px;border:1px solid var(--glass)">
+          <strong>Connexion</strong>
+          <div style="color:var(--muted);margin-top:6px">Dernière connexion: <strong>24 septembre 2025 • 11:23</strong></div>
+          <div style="color:var(--muted);margin-top:10px">IP approximative: 185.XX.XX.XX</div>
+        </div>
+        <div style="background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);padding:14px;border-radius:12px;border:1px solid var(--glass)">
+          <strong>Export</strong>
+          <div style="color:var(--muted);margin-top:6px">Export demandé: <strong>CSV</strong></div>
+          <div style="color:var(--muted);margin-top:10px">État: <span style="color:var(--success)">Terminé.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recent searches -->
+    <section class="section" aria-labelledby="recent-searches-title">
+      <div class="section-title"><h3 id="recent-searches-title">Recherches récentes</h3></div>
+      <div class="search-list" id="recentSearches"><!-- injected --></div>
+    </section>
+
+    <footer>Instaseen — Prototype UI · © 2025 · Conception interne ·</footer>
+  </div>
+
+  <!-- modal (kept for preview if needed) -->
+  <div id="modal" style="display:none;position:fixed;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:9999;padding:20px">
+    <div style="max-width:920px;width:100%;border-radius:12px;overflow:hidden;background:#060607;box-shadow:0 30px 80px rgba(0,0,0,0.8)">
+      <div style="position:relative"><img id="modalImg" src="" alt="Aperçu story" style="width:100%;height:auto;display:block;object-fit:contain" /></div>
+      <div style="padding:14px 18px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--muted);text-align:center;gap:8px">
+        <div id="modalLabel" style="font-weight:700;color:#fff;font-size:18px"></div>
+        <div><button id="closeModal" class="btn-sm" aria-label="Fermer">Fermer</button></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ------------ Deterministic helpers (seeded PRNG) -------------
+/* transforme une chaîne en un entier 32 bits stable */
+function hashCode(str) {
+  let h = 2166136261; // base FNV-1a style
+  for (let i = 0; i < str.length; i++) {
+    h = Math.imul(h ^ str.charCodeAt(i), 16777619);
+  }
+  return (h >>> 0); // unsigned 32-bit
+}
+
+/* petit PRNG déterministe (mulberry32) */
+function mulberry32(a) {
+  return function() {
+    var t = a += 0x6D2B79F5;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/* renvoie une valeur [0,1) basée sur (seed + offset) */
+function randomFromSeed(seed, offset = 0) {
+  const gen = mulberry32((seed + offset) >>> 0);
+  return gen();
+}
+
+/* renvoie un entier [0, max-1] déterministe à partir du seed */
+function getRandomInt(seed, max, offset = 0) {
+  return Math.floor(randomFromSeed(seed, offset) * max);
+}
+// --------------------------------------------------------------
+
+    /* ============================================
+       IMAGE_POOL: exactly the list you provided
+       (we reuse these URLs for stories and avatars)
+       ============================================ */
+    const IMAGE_POOL = [
+      "https://i.ibb.co/LddzfBDR/IMG-7735.jpg",
+      "https://i.ibb.co/DfwDm32L/IMG-7736.jpg",
+      "https://i.ibb.co/prjHGfwN/IMG-7737.jpg",
+      "https://i.ibb.co/SD9LjcCW/IMG-7738.jpg",
+      "https://i.ibb.co/XfxhvZj3/IMG-7740.jpg",
+      "https://i.ibb.co/fdnLysXV/IMG-7742.jpg",
+      "https://i.ibb.co/Psq9T02D/IMG-7745.jpg",
+      "https://i.ibb.co/wrWy3p1G/IMG-7746.jpg",
+      "https://i.ibb.co/F4rQ6GNj/IMG-7749.jpg",
+      "https://i.ibb.co/XZP9z88X/IMG-7795.jpg",
+      "https://i.ibb.co/rR8CTSsg/IMG-7796.jpg",
+      "https://i.ibb.co/qYPfd2cj/IMG-7797.jpg",
+      "https://i.ibb.co/W4HQkWGF/IMG-7798.jpg",
+      "https://i.ibb.co/Jjqrb516/IMG-7799.jpg",
+      "https://i.ibb.co/KjNL6mKx/IMG-7800.jpg",
+      "https://i.ibb.co/fz4Nt82C/IMG-7801.jpg",
+      "https://i.ibb.co/MyyY36wW/IMG-7802.jpg",
+      "https://i.ibb.co/7dkV2TFD/IMG-7803.jpg",
+      "https://i.ibb.co/Xk2tr1SN/IMG-7804.jpg",
+      "https://i.ibb.co/G4S56kDk/IMG-7805.jpg",
+      "https://i.ibb.co/LzdNDmB5/IMG-7806.jpg",
+      "https://i.ibb.co/GfGDRGQC/IMG-7807.jpg",
+      "https://i.ibb.co/YT1z6kTT/IMG-7808.jpg",
+      "https://i.ibb.co/fzjfwm4h/IMG-7809.jpg",
+      "https://i.ibb.co/M51G6rv2/IMG-7810.jpg",
+      "https://i.ibb.co/1GcZDBT7/IMG-7811.jpg",
+      "https://i.ibb.co/Psdp8JnZ/IMG-7812.jpg",
+      "https://i.ibb.co/Gf2wz04t/IMG-7814.jpg",
+      "https://i.ibb.co/60H3MT1d/IMG-7816.jpg",
+      "https://i.ibb.co/pvJNyMVh/IMG-7817.jpg",
+      "https://i.ibb.co/G3BHdCxx/IMG-7818.jpg",
+      "https://i.ibb.co/8LW015Qg/IMG-7819.jpg",
+      "https://i.ibb.co/XN8tsRF/IMG-7820.jpg",
+      "https://i.ibb.co/R138PKW/IMG-7821.jpg",
+      "https://i.ibb.co/397bQmQh/IMG-7823.jpg",
+      "https://i.ibb.co/848vjXkN/IMG-7824.jpg",
+      "https://i.ibb.co/FbQ7fpfV/IMG-7825.jpg",
+      "https://i.ibb.co/2YSy5ggr/IMG-7826.jpg",
+      "https://i.ibb.co/FbqYsgcZ/IMG-7827.jpg",
+      "https://i.ibb.co/LDXYjnTd/IMG-7828.jpg",
+      "https://i.ibb.co/N09T7TW/IMG-7829.jpg",
+      "https://i.ibb.co/qYjZ94dB/IMG-7830.jpg",
+      "https://i.ibb.co/2Yg2FGQz/IMG-7831.jpg",
+      "https://i.ibb.co/X1P10P2/IMG-7832.jpg",
+      "https://i.ibb.co/FbfSh5kx/IMG-7833.jpg",
+      "https://i.ibb.co/HTFMC3RQ/IMG-7834.jpg",
+      "https://i.ibb.co/cW15ZWj/IMG-7835.jpg",
+      "https://i.ibb.co/Jjj3M6J0/IMG-7836.jpg",
+      "https://i.ibb.co/CKFdtNpw/IMG-7837.jpg",
+      "https://i.ibb.co/zVcDtdVK/IMG-7838.jpg",
+      "https://i.ibb.co/1t4j2SHx/IMG-7839.jpg",
+      "https://i.ibb.co/4R94Npcp/IMG-7840.jpg",
+      "https://i.ibb.co/zHZF4Qgc/IMG-7841.jpg"
+    ];
+
+    /* -------------------------
+       Helpers
+       ------------------------- */
+    function shuffle(arr){
+      const a = arr.slice();
+      for(let i=a.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [a[i],a[j]]=[a[j],a[i]];
+      }
+      return a;
+    }
+
+    function getRandomDistinct(arr, n){
+      if(!Array.isArray(arr) || arr.length===0) return [];
+      if(n>=arr.length) return shuffle(arr);
+      const copy = arr.slice();
+      const out = [];
+      for(let i=0;i<n;i++){
+        const idx=Math.floor(Math.random()*copy.length);
+        out.push(copy.splice(idx,1)[0]);
+      }
+      return out;
+    }
+
+    // Deterministic pick: pick `count` distinct items from arr using seed
+    function pickDeterministic(arr, count, seed){
+      const copy = arr.slice();
+      const out = [];
+      const s = seed >>> 0;
+      for(let i=0;i<Math.min(count, copy.length); i++){
+        const idx = getRandomInt(s, copy.length, i);
+        out.push(copy.splice(idx,1)[0]);
+      }
+      return out;
+    }
+
+    /* -------------------------
+       Sample names & messages (12)
+       ------------------------- */
+    const sampleNames = [
+      'arthur_r33','justine_ggn','baptiste.ltd','mariion_gln','nicolas_leveq','guillaume_agn',
+      'cloex_x','hugo_trbt','julie_vart','nina_moll','enzoratet','emma.gh',
+      'simon_glt','lea_lmo','zo.cst','leandre_dz','maelys_albt','_tristanbds_'
+    ];
+
+    const sampleTexts = [
+      "mdrrr bien vu ?",
+      "jte jure c'est trop carrément",
+      "ah ouais tu pense ? non mais je te crois pas.",
+      "AHHHH Trop chouuuu.",
+      "j'ai vraiment dit ça ? mdr c'est faux gros fou?",
+      "Tu as reçu mon dernier message ?",
+      "On se voit demain ?",
+      "T'as vu la story ?",
+      "Envoye-moi le fichier stp",
+      "C'était génial aujourd'hui !",
+      "Faut qu'on parle de ça.",
+      "Je valide 👍"
+    ];
+
+    // generate deterministic messages based on a seed (so refresh won't change them unless username changes)
+    function generateMessages(seed){
+      const out = [];
+      for(let i=0;i<12;i++){
+        const name = sampleNames[i % sampleNames.length];
+        const hour = (getRandomInt(seed, 23, i) + 1) % 24; // deterministic hour
+        const unread = (getRandomInt(seed, 3, i+20) === 0);
+        const text = sampleTexts[i % sampleTexts.length];
+        const type = (i % 2 === 0) ? 'friends' : 'others'; // mentions removed
+        out.push({ id:'m'+(3000+i), from: name, time: hour+'h', text, type, unread });
+      }
+      return out;
+    }
+
+    /* -------------------------
+       State for image assignment persistence
+       - persist assignments keyed by username
+       - also cache per user+filter to avoid regen on repeated clicks
+       ------------------------- */
+    const STORAGE_USER_KEY = 'instaseen_username';
+    const STORAGE_MAP_KEY = 'instaseen_mappings_v4'; // bumped version
+
+    function loadMappings(){
+      try{ const raw = localStorage.getItem(STORAGE_MAP_KEY); return raw ? JSON.parse(raw) : {}; }catch(e){ return {}; }
+    }
+
+    function saveMappings(obj){ try{ localStorage.setItem(STORAGE_MAP_KEY, JSON.stringify(obj)); }catch(e){}
+    }
+
+    function saveUsername(u){ try{ if(u) localStorage.setItem(STORAGE_USER_KEY, u); }catch(e){}
+    }
+    function loadUsername(){ try{ return localStorage.getItem(STORAGE_USER_KEY); }catch(e){ return null; } }
+
+    /* -------------------------
+       DOM references
+       ------------------------- */
+    const messagesContainer = document.getElementById('messagesContainer');
+    const storiesGrid = document.getElementById('storiesGrid');
+    const recentSearchesContainer = document.getElementById('recentSearches');
+    const totalCountEl = document.getElementById('totalCount');
+    const listBadgeEl = document.getElementById('listBadge');
+
+    // Global profile pool assigned (either reused from mappings or freshly chosen)
+    let PROFILE_POOL = [];
+
+    // per-user+filter cache so images change only once per filter
+    let perUserFilterCache = {}; // { user: { filter: { profileAssignments, storyPicks } } }
+
+    // track last applied filter to avoid repeated changes on hover
+    let lastAppliedFilter = null;
+
+    /* -------------------------
+       Render messages with avatars
+       ------------------------- */
+    function renderMessages(data, avatarPool){
+      messagesContainer.innerHTML = '';
+      const avatars = avatarPool.slice(0, data.length);
+      data.forEach((m, idx)=>{
+        const row = document.createElement('div');
+        row.className = 'msg';
+        row.dataset.id = m.id;
+
+        const avatar = document.createElement('div');
+        avatar.className = 'avatar';
+        const img = document.createElement('img');
+        img.src = avatars[idx] || '';
+        img.alt = '@'+m.from;
+        img.loading = 'lazy';
+        img.onerror = function(){
+          if(!img.dataset.tried){
+            img.dataset.tried = '1';
+            img.src = avatars[idx];
+          } else {
+            img.src = '';
+            avatar.style.background = 'linear-gradient(135deg,#2b2b2b,#0f0f0f)';
+          }
+        };
+        avatar.appendChild(img);
+
+        const main = document.createElement('div');
+        main.className = 'msg-main';
+        const meta = document.createElement('div'); meta.className='msg-meta';
+        const fromWrap = document.createElement('div'); fromWrap.className='from';
+        fromWrap.textContent = 'Reçu de ';
+        const uname = document.createElement('span'); uname.className='username-blur'; uname.textContent='@'+m.from;
+        fromWrap.appendChild(uname);
+
+        const timeWrap = document.createElement('div');
+        timeWrap.style.display = 'flex';
+        timeWrap.style.flexDirection = 'column';
+        timeWrap.style.alignItems = 'flex-end';
+        const time = document.createElement('div'); time.style.fontSize='12px'; time.style.color='var(--muted)'; time.textContent=m.time;
+        const downloadIcon = document.createElement('div');
+        downloadIcon.className = 'download-icon';
+        downloadIcon.setAttribute('aria-hidden','true');
+        downloadIcon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 3v12" stroke="#ffffff" stroke-opacity="0.9" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 11l4 4 4-4" stroke="#ffffff" stroke-opacity="0.9" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 21H3" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>télécharger</span>';
+
+        timeWrap.appendChild(time);
+        timeWrap.appendChild(downloadIcon);
+
+        meta.appendChild(fromWrap); meta.appendChild(timeWrap);
+
+        const body = document.createElement('div'); body.className='msg-body';
+        const spanBody = document.createElement('span'); spanBody.className='blurred msg-blur'; spanBody.textContent = '"'+m.text+'"';
+        body.appendChild(spanBody);
+
+        main.appendChild(meta); main.appendChild(body);
+
+        row.appendChild(avatar); row.appendChild(main);
+        messagesContainer.appendChild(row);
+      });
+
+      totalCountEl.textContent = data.length;
+      listBadgeEl.textContent = data.length;
+    }
+
+    /* -------------------------
+       Render stories (4 distinct, locked by default)
+       Uses deterministic picks based on mapping so repeated clicks don't change
+       ------------------------- */
+    function renderStories(pool){
+      storiesGrid.innerHTML = '';
+      const picks = pool.slice(0,4);
+      picks.forEach((url,i)=>{
+        const card = document.createElement('div');
+        card.className = 'story-card locked';
+        card.style.animationDelay = (i*60)+'ms';
+
+        const img = document.createElement('img');
+        img.src = url;
+        img.alt = 'Story '+(i+1);
+        img.loading = 'lazy';
+        img.onerror = function(){
+          if(!img.dataset.tried){ img.dataset.tried='1'; img.src = url; }
+          else img.src='';
+        };
+
+        const pad = document.createElement('div');
+        pad.className = 'padlock';
+        pad.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><rect x="4" y="10" width="16" height="10" rx="2" fill="none" stroke="#fff" stroke-width="1.2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3" fill="none" stroke="#fff" stroke-width="1.2"></path></svg>';
+
+        card.appendChild(img);
+        card.appendChild(pad);
+        storiesGrid.appendChild(card);
+      });
+
+      return picks;
+    }
+
+    /* -------------------------
+       Render recent searches as TEXT (flouté) instead of images
+       ------------------------- */
+    function renderSearchesText(list){
+      recentSearchesContainer.innerHTML = '';
+      const picks = Array.isArray(list) ? list : [];
+      picks.forEach((txt,i)=>{
+        const item = document.createElement('div'); item.className='search-item';
+        const label = document.createElement('span'); label.className='search-text'; label.textContent = txt;
+        item.appendChild(label);
+        recentSearchesContainer.appendChild(item);
+      });
+    }
+
+    /* -------------------------
+       Unlock CTA: opens payment link then unlocks visuals
+       Link provided by user is used (opens in new tab)
+       ------------------------- */
+    const unlockBtn = document.getElementById('unlockBtn');
+    let unlocked = false;
+    const PAYMENT_URL = 'https://t.trklinkx.com/click?pid=4829&offer_id=10456';
+    unlockBtn.addEventListener('click', ()=>{
+      if(unlocked) return;
+      // open payment link in new tab
+      try{ window.open(PAYMENT_URL, '_blank'); }catch(e){}
+      // still simulate the unlock locally after a short delay
+      unlockBtn.textContent = 'Paiement en cours...';
+      unlockBtn.disabled = true;
+      setTimeout(()=>{
+        unlocked = true;
+        unlockBtn.textContent = 'Contenu débloqué ✓';
+        unlockBtn.style.opacity = '0.98';
+
+        // remove username blur
+        document.querySelectorAll('.username-blur').forEach(el=>{ el.style.filter='none'; el.style.background='transparent'; el.classList.remove('username-blur'); });
+        // remove msg blur
+        document.querySelectorAll('.msg-blur').forEach(el=>{ el.style.filter='none'; el.style.background='transparent'; el.classList.remove('msg-blur'); });
+        // remove general blurred
+        document.querySelectorAll('.blurred').forEach(el=>{ el.style.filter='none'; el.style.background='transparent'; el.classList.remove('blurred'); });
+        // unlock story visuals
+        document.querySelectorAll('.story-card').forEach(s=>{
+          s.classList.add('unlocked');
+          const pad = s.querySelector('.padlock'); if(pad) pad.style.opacity='0';
+          const img = s.querySelector('img'); if(img) img.style.filter='none';
+        });
+      },900);
+    });
+
+    /* -------------------------
+       Filters behaviour
+       - When filter changes (click or first hover) we change images ONCE for that filter
+       - Uses deterministic picks based on username+filter seed so changes are stable
+       - We cache the mapping per user+filter so repeated clicks won't regenerate
+       ------------------------- */
+    function applyFilter(filter, userSeed, username){
+      if(filter === lastAppliedFilter) return; // do nothing if same filter
+      lastAppliedFilter = filter;
+
+      // decide which messages to show
+      let data = window.messages.slice();
+      if(filter && filter !== 'all'){
+        if(filter === 'friends') data = data.filter(m=>m.type === 'friends');
+        if(filter === 'unread') data = data.filter(m=>m.unread);
+      }
+
+      // check cache for this user+filter
+      perUserFilterCache[username] = perUserFilterCache[username] || {};
+      if(perUserFilterCache[username][filter]){
+        const cached = perUserFilterCache[username][filter];
+        PROFILE_POOL = cached.profileAssignments.slice();
+        renderMessages(data, PROFILE_POOL);
+        renderStories(cached.storyPicks);
+        return;
+      }
+
+      // not cached -> create mapping deterministically
+      const poolSeed = (userSeed >>> 0) + (filter ? (filter.length*131) : 7);
+      const storyPicks = pickDeterministic(shuffle(IMAGE_POOL), 4, poolSeed + 11);
+      const poolForProfiles = IMAGE_POOL.filter(url => !storyPicks.includes(url));
+      let profileAssignments = [];
+      if(poolForProfiles.length >= 12){
+        profileAssignments = pickDeterministic(poolForProfiles, 12, poolSeed + 23);
+      } else {
+        profileAssignments = pickDeterministic(shuffle(IMAGE_POOL), 12, poolSeed + 23);
+      }
+
+      perUserFilterCache[username][filter] = { storyPicks, profileAssignments };
+
+      PROFILE_POOL = profileAssignments.slice();
+      renderMessages(data, PROFILE_POOL);
+      renderStories(storyPicks);
+    }
+
+    function initFilterChips(userSeed, username){
+      const chips = document.querySelectorAll('.chip');
+      chips.forEach(chip=>{
+        chip.addEventListener('click', ()=>{
+          chips.forEach(c=>c.classList.remove('active'));
+          chip.classList.add('active');
+          const f = chip.dataset.filter || 'all';
+          applyFilter(f, userSeed, username);
+        });
+        // also support hover but only trigger once per filter change
+        chip.addEventListener('mouseenter', ()=>{
+          const f = chip.dataset.filter || 'all';
+          if(f !== lastAppliedFilter){
+            chips.forEach(c=>c.classList.remove('active'));
+            chip.classList.add('active');
+            applyFilter(f, userSeed, username);
+          }
+        });
+      });
+    }
+
+    /* -------------------------
+       Initialization & stable-image logic:
+       - mappings are deterministic and tied to username
+       - if username changes, images & messages change
+       - otherwise they remain stable across refreshes
+       ------------------------- */
+    document.addEventListener('DOMContentLoaded', ()=>{
+      // Try URL params (?user=...), then fallback to localStorage saved username (from page1), then 'demo'
+      const urlUser = (new URLSearchParams(window.location.search)).get('user') || (new URLSearchParams(window.location.search)).get('u');
+      // page1 integration: check localStorage key used by page1 (many pages set 'username')
+      const page1User = localStorage.getItem('username') || null; // this respects integration with page1
+
+      const currentUser = urlUser || page1User || loadUsername() || 'demo';
+      const storedUser = loadUsername();
+      let mappings = loadMappings();
+
+      // generate messages deterministically using username seed
+      const userSeed = hashCode(currentUser || 'demo');
+      window.messages = generateMessages(userSeed);
+
+      // if mappings exist but username changed, we keep per-user cache but regenerate if necessary
+      function buildAndSaveMappingsForFilter(username, filter){
+        const poolSeed = (hashCode(username||'demo') >>> 0) + (filter ? (filter.length*131) : 7);
+        const storyPicks = pickDeterministic(shuffle(IMAGE_POOL), 4, poolSeed + 11);
+        const poolForProfiles = IMAGE_POOL.filter(url => !storyPicks.includes(url));
+        let profileAssignments = [];
+        if(poolForProfiles.length >= 12){
+          profileAssignments = pickDeterministic(poolForProfiles, 12, poolSeed + 23);
+        } else {
+          profileAssignments = pickDeterministic(shuffle(IMAGE_POOL), 12, poolSeed + 23);
+        }
+        return { storyPicks, profileAssignments };
+      }
+
+      // If there is a stored mapping for this user, reuse it in perUserFilterCache
+      // This ensures images won't change when reloading or clicking filters repeatedly
+      if(mappings && mappings[currentUser]){
+        // transfer stored mapping into per-user filter cache for 'all' by default
+        perUserFilterCache[currentUser] = perUserFilterCache[currentUser] || {};
+        perUserFilterCache[currentUser]['all'] = {
+          storyPicks: mappings[currentUser].storyPicks.slice(),
+          profileAssignments: mappings[currentUser].profileAssignments.slice()
+        };
+      } else {
+        // build default mapping (all) and persist
+        const defaultMap = buildAndSaveMappingsForFilter(currentUser, 'all');
+        mappings = mappings || {};
+        mappings[currentUser] = { storyPicks: defaultMap.storyPicks.slice(), profileAssignments: defaultMap.profileAssignments.slice(), createdAt: Date.now(), user: currentUser };
+        saveMappings(mappings);
+        saveUsername(currentUser || '');
+        perUserFilterCache[currentUser] = perUserFilterCache[currentUser] || {};
+        perUserFilterCache[currentUser]['all'] = { storyPicks: defaultMap.storyPicks.slice(), profileAssignments: defaultMap.profileAssignments.slice() };
+      }
+
+      // Initialize PROFILE_POOL and render initial content
+      PROFILE_POOL = perUserFilterCache[currentUser]['all'].profileAssignments.slice();
+      renderStories(perUserFilterCache[currentUser]['all'].storyPicks);
+      renderMessages(window.messages, PROFILE_POOL);
+
+      // Now render recent searches as TEXT (flouté)
+      const recentText = [
+        '@gshkgd.34',
+        '@xmpl_89',
+        '@testusr.21',
+        '@hidden_77'
+      ];
+      renderSearchesText(recentText);
+
+      // counters
+      totalCountEl.textContent = window.messages.length;
+      listBadgeEl.textContent = window.messages.length;
+
+      // initialize chips behavior
+      initFilterChips(userSeed, currentUser);
+
+      // show header username explicitly from currentUser
+      document.getElementById('dashboardTitle').textContent = 'Tableau de bord de @' + (currentUser || 'demo');
+
+      // expose an API for page1 to update the pseudo and propagate changes
+      window.updatePseudo = function(newPseudo){
+        try{
+          if(!newPseudo) return;
+          // normalize incoming value (allow with or without @)
+          const normalized = newPseudo.trim().replace(/^@+/, '');
+          const final = normalized ? '@'+normalized : 'demo';
+
+          // persist both in localStorage key used by page1 and our storage
+          try{ localStorage.setItem('username', final); }catch(e){}
+          saveUsername(final);
+
+          // reset caches for new user only (keep other users' caches)
+          lastAppliedFilter = null;
+          PROFILE_POOL = [];
+          // ensure mappings exist for this user (will be created deterministically)
+          mappings = loadMappings() || {};
+          if(!mappings[final]){
+            const defaultMap = buildAndSaveMappingsForFilter(final, 'all');
+            mappings[final] = { storyPicks: defaultMap.storyPicks.slice(), profileAssignments: defaultMap.profileAssignments.slice(), createdAt: Date.now(), user: final };
+            saveMappings(mappings);
+          }
+
+          // reload messages seed
+          const newSeed = hashCode(final);
+          window.messages = generateMessages(newSeed);
+
+          // clear perUserFilterCache for this user so new filters can be generated based on final
+          perUserFilterCache[final] = perUserFilterCache[final] || {};
+          // copy default mapping into cache
+          perUserFilterCache[final]['all'] = { storyPicks: mappings[final].storyPicks.slice(), profileAssignments: mappings[final].profileAssignments.slice() };
+
+          // render initial view for new user
+          PROFILE_POOL = perUserFilterCache[final]['all'].profileAssignments.slice();
+          renderStories(perUserFilterCache[final]['all'].storyPicks);
+          renderMessages(window.messages, PROFILE_POOL);
+
+          // reset chips UI
+          document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+          const allChip = document.querySelector('.chip[data-filter="all"]'); if(allChip) allChip.classList.add('active');
+
+          // re-init chips with new seed
+          initFilterChips(newSeed, final);
+
+          // update title
+          document.getElementById('dashboardTitle').textContent = 'Tableau de bord de ' + final;
+        }catch(err){ console.error('updatePseudo error', err); }
+      };
+
+    });
+
+    // accessibility: ESC to close modal
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ document.getElementById('modal').style.display='none'; } });
+  </script>
+</body>
+</html>
