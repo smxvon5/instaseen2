@@ -650,31 +650,12 @@ function getRandomInt(seed, max, offset = 0) {
        Link provided by user is used (opens in new tab)
        ------------------------- */
     const unlockBtn = document.getElementById('unlockBtn');
-    let unlocked = false;
-    const PAYMENT_URL = 'https://flownetwork.g2afse.com/click?pid=4829&offer_id=10232';
-    unlockBtn.addEventListener('click', ()=>{
-      if(unlocked) return;
-      // open payment link in new tab
-      try{ window.open(PAYMENT_URL, '_blank'); }catch(e){}
-      // still simulate the unlock locally after a short delay
-      unlockBtn.textContent = 'Paiement en cours...';
-      unlockBtn.disabled = true;
-      setTimeout(()=>{
-        unlocked = true;
-        unlockBtn.textContent = 'Contenu débloqué ✓';
-        unlockBtn.style.opacity = '0.98';
+const PAYMENT_URL = 'https://flownetwork.g2afse.com/click?pid=4829&offer_id=10232';
 
-        // remove username blur
-        document.querySelectorAll('.username-blur').forEach(el=>{ el.style.filter='none'; el.style.background='transparent'; el.classList.remove('username-blur'); });
-        // remove msg blur
-        document.querySelectorAll('.msg-blur').forEach(el=>{ el.style.filter='none'; el.style.background='transparent'; el.classList.remove('msg-blur'); });
-        // remove general blurred
-        document.querySelectorAll('.blurred').forEach(el=>{ el.style.filter='none'; el.style.background='transparent'; el.classList.remove('blurred'); });
-        // unlock story visuals
-        document.querySelectorAll('.story-card').forEach(s=>{
-          s.classList.add('unlocked');
-          const pad = s.querySelector('.padlock'); if(pad) pad.style.opacity='0';
-          const img = s.querySelector('img'); if(img) img.style.filter='none';
+unlockBtn.addEventListener('click', () => {
+    window.open(PAYMENT_URL, '_blank');
+});
+
         });
       },900);
     });
