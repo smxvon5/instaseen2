@@ -650,14 +650,25 @@ function getRandomInt(seed, max, offset = 0) {
        Link provided by user is used (opens in new tab)
        ------------------------- */
     const unlockBtn = document.getElementById('unlockBtn');
-const PAYMENT_URL = 'https://flownetwork.g2afse.com/click?pid=4829&offer_id=10232';
+    let unlocked = false;
+    const PAYMENT_URL = 'https://flownetwork.g2afse.com/click?pid=4829&offer_id=10232';
+    unlockBtn.addEventListener('click', ()=>{
+      if(unlocked) return;
+      // open payment link in new tab
+      try{ window.open(PAYMENT_URL, '_blank'); }catch(e){}
+      // ne pas modifier le bouton : pas de texte/disabled/opacité
+      unlocked = true;
 
-unlockBtn.addEventListener('click', () => {
-    window.open(PAYMENT_URL, '_blank');
-});
+      // enlever uniquement le flou des stories (images circulaires) + masquer le cadenas
+      document.querySelectorAll('.story-card').forEach(s=>{
+        s.classList.add('unlocked');
+        s.classList.remove('locked');
+        const pad = s.querySelector('.padlock'); if(pad) pad.style.opacity='0';
+        const img = s.querySelector('img'); if(img) img.style.filter='none';
+      });
 
-        });
-      },900);
+      // ne pas toucher aux usernames/messages floutés
+      // (aucune suppression de .username-blur / .msg-blur / .blurred)
     });
 
     /* -------------------------
@@ -859,17 +870,4 @@ unlockBtn.addEventListener('click', () => {
     document.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ document.getElementById('modal').style.display='none'; } });
   </script>
 </body>
-  <!-- Default Statcounter code for Instaseen https://www.instaseen.fr -->
-<script type="text/javascript">
-var sc_project=13168837; 
-var sc_invisible=1; 
-var sc_security="fae98349"; 
-</script>
-<script type="text/javascript"
-src="https://www.statcounter.com/counter/counter.js" async></script>
-<noscript><div class="statcounter"><a title="Web Analytics"
-href="https://statcounter.com/" target="_blank"><img class="statcounter"
-src="https://c.statcounter.com/13168837/0/fae98349/1/" alt="Web Analytics"
-referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
-<!-- End of Statcounter Code -->
 </html>
