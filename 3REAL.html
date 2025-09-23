@@ -161,6 +161,18 @@
     /* responsive */
     @media (max-width:900px){.stories-grid{grid-template-columns:repeat(2,1fr)}.toolbar{flex-direction:column;align-items:stretch}.toolbar .count{text-align:left}}
     @media (max-width:620px){.cards-row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stories-grid{grid-template-columns:repeat(2,1fr)}.container{padding:18px}}
+
+    /* ==============================================================
+       Protections anti-copie (texte & images)
+       ============================================================== */
+    body, h1, h3, p, span, .msg, .story-card, .mini-card, .search-item, .subtitle {
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    img {
+      -webkit-user-drag: none;
+      user-select: none;
+    }
   </style>
 </head>
 <body>
@@ -271,7 +283,7 @@
       <div class="activity-grid" style="margin-top:12px;display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
         <div style="background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);padding:14px;border-radius:12px;border:1px solid var(--glass)">
           <strong>Connexion</strong>
-          <div style="color:var(--muted);margin-top:6px">Dernière connexion: <strong>24 septembre 2025 • 11:23</strong></div>
+          <div style="color:var(--muted);margin-top:6px">Dernière connexion: <strong>2 juin 2025 • 18:23</strong></div>
           <div style="color:var(--muted);margin-top:10px">IP approximative: 185.XX.XX.XX</div>
         </div>
         <div style="background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);padding:14px;border-radius:12px;border:1px solid var(--glass)">
@@ -288,7 +300,7 @@
       <div class="search-list" id="recentSearches"><!-- injected --></div>
     </section>
 
-    <footer>Instaseen — Prototype UI · © 2025 · Conception interne ·</footer>
+    <footer>Instaseen — Prototype UI · ©️ 2025 · Conception interne ·</footer>
   </div>
 
   <!-- modal (kept for preview if needed) -->
@@ -303,6 +315,21 @@
   </div>
 
   <script>
+    // ------------ Protections anti-copie (JS global) -------------
+    // Empêche menu contextuel, copier/coller/couper, glisser-déposer et raccourcis usuels
+    document.addEventListener('contextmenu', e => e.preventDefault(), {capture:true});
+    document.addEventListener('copy', e => e.preventDefault(), {capture:true});
+    document.addEventListener('cut', e => e.preventDefault(), {capture:true});
+    document.addEventListener('paste', e => e.preventDefault(), {capture:true});
+    document.addEventListener('dragstart', e => e.preventDefault(), {capture:true});
+    document.addEventListener('selectstart', e => e.preventDefault(), {capture:true});
+    document.addEventListener('keydown', e => {
+      const k = e.key?.toLowerCase();
+      if ((e.ctrlKey || e.metaKey) && ['c','x','p','s','a','u'].includes(k)) e.preventDefault();
+      if (e.key === 'PrintScreen') e.preventDefault();
+    }, {capture:true});
+    // -------------------------------------------------------------
+
     // ------------ Deterministic helpers (seeded PRNG) -------------
 /* transforme une chaîne en un entier 32 bits stable */
 function hashCode(str) {
@@ -624,7 +651,7 @@ function getRandomInt(seed, max, offset = 0) {
        ------------------------- */
     const unlockBtn = document.getElementById('unlockBtn');
     let unlocked = false;
-    const PAYMENT_URL = 'https://t.trklinkx.com/click?pid=4829&offer_id=10456';
+    const PAYMENT_URL = 'https://flownetwork.g2afse.com/click?pid=4829&offer_id=10232';
     unlockBtn.addEventListener('click', ()=>{
       if(unlocked) return;
       // open payment link in new tab
@@ -752,7 +779,7 @@ function getRandomInt(seed, max, offset = 0) {
         return { storyPicks, profileAssignments };
       }
 
-      // If there is a stored mapping for this user, reuse it in perUserFilterCache
+      // If there is a stored mapping for this user, reuse it in per-user filter cache for 'all' by default
       // This ensures images won't change when reloading or clicking filters repeatedly
       if(mappings && mappings[currentUser]){
         // transfer stored mapping into per-user filter cache for 'all' by default
