@@ -128,8 +128,8 @@
     .messages{display:flex;flex-direction:column;gap:12px}
     .msg{display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:12px;background:linear-gradient(145deg,#121214,#0b0b0d);border:1px solid rgba(255,255,255,0.02);box-shadow:6px 6px 18px rgba(0,0,0,0.6), -6px -6px 18px rgba(255,255,255,0.01);transition:transform .16s ease}
     .msg:hover{transform:translateY(-6px)}
-    .avatar{width:56px;height:56px;border-radius:50%;overflow:hidden;flex-shrink:0;background:linear-gradient(135deg,#2b2b2b,#0f0f0f);display:grid;place-items:center;box-shadow:inset 0 1px 0 rgba(255,255,255,0.02)}
-    .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+    .avatar{width:56px;height:56px;border-radius:50%;overflow:hidden;flex-shrink:0;background:linear-gradient(135deg,#2b2b2b,#0f0f0f);display:grid;place-items:center;box-shadow:inset 0 1px 0 rgba(255,255,255,0.02);position:relative}
+    .avatar img{width:100%;height:100%;object-fit:cover;display:block;filter:blur(6px);transform:scale(1.03)}
     .msg-main{flex:1;display:flex;flex-direction:column;gap:6px}
     .msg-meta{display:flex;justify-content:space-between;align-items:center;gap:8px}
     .msg-meta .from{font-weight:700;display:flex;align-items:center;gap:8px}
@@ -173,6 +173,31 @@
       -webkit-user-drag: none;
       user-select: none;
     }
+
+    /* ==============================================================
+       Lock overlay on blurred avatars (Reçu de)
+       - solid black circular lock centered on avatar (non transparent)
+       - sized so blurred edges remain visible
+       ============================================================== */
+    .avatar{position:relative}
+    .avatar .avatar-lock{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      width:44px;
+      height:44px;
+      border-radius:50%;
+      background:#000; /* solid black as requested */
+      display:grid;
+      place-items:center;
+      z-index:3;
+      box-shadow:0 10px 24px rgba(0,0,0,0.6);
+      border:2px solid rgba(255,255,255,0.03);
+    }
+    .avatar .avatar-lock svg{width:22px;height:22px;display:block;fill:none;stroke:#fff;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+    /* ensure blurred avatar image sits behind the lock visually */
+    .avatar img{display:block;width:100%;height:100%;object-fit:cover}
   </style>
 </head>
 <body>
@@ -283,7 +308,7 @@
       <div class="activity-grid" style="margin-top:12px;display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
         <div style="background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);padding:14px;border-radius:12px;border:1px solid var(--glass)">
           <strong>Connexion</strong>
-          <div style="color:var(--muted);margin-top:6px">Dernière connexion: <strong>2 juin 2025 • 18:23</strong></div>
+          <div style="color:var(--muted);margin-top:6px">Dernière connexion: <strong>25 septembre 2025 • 18:23</strong></div>
           <div style="color:var(--muted);margin-top:10px">IP approximative: 185.XX.XX.XX</div>
         </div>
         <div style="background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);padding:14px;border-radius:12px;border:1px solid var(--glass)">
@@ -527,7 +552,7 @@ function getRandomInt(seed, max, offset = 0) {
     // Global profile pool assigned (either reused from mappings or freshly chosen)
     let PROFILE_POOL = [];
 
-    // per-user+filter cache so images change only once per filter
+    // per-user+filter cache so images change only once for that filter
     let perUserFilterCache = {}; // { user: { filter: { profileAssignments, storyPicks } } }
 
     // track last applied filter to avoid repeated changes on hover
@@ -560,6 +585,13 @@ function getRandomInt(seed, max, offset = 0) {
           }
         };
         avatar.appendChild(img);
+
+        // Add black lock overlay centered on the avatar (non-transparent, large enough to leave blurred edges visible)
+        const lock = document.createElement('div');
+        lock.className = 'avatar-lock';
+        lock.setAttribute('aria-hidden', 'true');
+        lock.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="10" width="16" height="10" rx="2" stroke="#fff" stroke-width="1.2" fill="none"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="#fff" stroke-width="1.2" fill="none"></path></svg>';
+        avatar.appendChild(lock);
 
         const main = document.createElement('div');
         main.className = 'msg-main';
@@ -656,27 +688,19 @@ function getRandomInt(seed, max, offset = 0) {
       if(unlocked) return;
       // open payment link in new tab
       try{ window.open(PAYMENT_URL, '_blank'); }catch(e){}
-      // still simulate the unlock locally after a short delay
-      unlockBtn.textContent = 'Paiement en cours...';
-      unlockBtn.disabled = true;
-      setTimeout(()=>{
-        unlocked = true;
-        unlockBtn.textContent = 'Contenu débloqué ✓';
-        unlockBtn.style.opacity = '0.98';
+      // ne pas modifier le bouton : pas de texte/disabled/opacité
+      unlocked = true;
 
-        // remove username blur
-        document.querySelectorAll('.username-blur').forEach(el=>{ el.style.filter='none'; el.style.background='transparent'; el.classList.remove('username-blur'); });
-        // remove msg blur
-        document.querySelectorAll('.msg-blur').forEach(el=>{ el.style.filter='none'; el.style.background='transparent'; el.classList.remove('msg-blur'); });
-        // remove general blurred
-        document.querySelectorAll('.blurred').forEach(el=>{ el.style.filter='none'; el.style.background='transparent'; el.classList.remove('blurred'); });
-        // unlock story visuals
-        document.querySelectorAll('.story-card').forEach(s=>{
-          s.classList.add('unlocked');
-          const pad = s.querySelector('.padlock'); if(pad) pad.style.opacity='0';
-          const img = s.querySelector('img'); if(img) img.style.filter='none';
-        });
-      },900);
+      // enlever uniquement le flou des stories (images circulaires) + masquer le cadenas
+      document.querySelectorAll('.story-card').forEach(s=>{
+        s.classList.add('unlocked');
+        s.classList.remove('locked');
+        const pad = s.querySelector('.padlock'); if(pad) pad.style.opacity='0';
+        const img = s.querySelector('img'); if(img) img.style.filter='none';
+      });
+
+      // ne pas toucher aux usernames/messages floutés
+      // (aucune suppression de .username-blur / .msg-blur / .blurred)
     });
 
     /* -------------------------
