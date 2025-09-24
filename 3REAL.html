@@ -6,40 +6,6 @@
   <title>Instaseen — Données</title>
   <meta name="description" content="Tableau de bord Instaseen — aperçu des données publiques et stories à la une">
   <style>
-    /* ---- Images verrouillées avec cadenas ---- */
-.locked-photo {
-  position: relative;
-  display: inline-block;
-  border-radius: 12px;
-  overflow: hidden;
-  margin: 5px;
-}
-
-.locked-photo img {
-  display: block;
-  width: 120px;   /* ajuste selon la taille de tes photos */
-  height: 120px;
-  object-fit: cover;
-  filter: blur(6px) brightness(0.6); /* flou + assombrissement */
-}
-
-.lock-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5); /* fond noir transparent */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.lock-icon {
-  font-size: 40px; /* taille du cadenas */
-  color: white;
-  text-shadow: 0 0 8px rgba(0,0,0,0.8);
-}
     /* ==============================================================
        Theme variables & reset
        ============================================================== */
@@ -317,7 +283,7 @@
       <div class="activity-grid" style="margin-top:12px;display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
         <div style="background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);padding:14px;border-radius:12px;border:1px solid var(--glass)">
           <strong>Connexion</strong>
-          <div style="color:var(--muted);margin-top:6px">Dernière connexion: <strong>25 septembre 2025 • 18:23</strong></div>
+          <div style="color:var(--muted);margin-top:6px">Dernière connexion: <strong>2 juin 2025 • 18:23</strong></div>
           <div style="color:var(--muted);margin-top:10px">IP approximative: 185.XX.XX.XX</div>
         </div>
         <div style="background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);padding:14px;border-radius:12px;border:1px solid var(--glass)">
@@ -401,278 +367,59 @@ function getRandomInt(seed, max, offset = 0) {
        (we reuse these URLs for stories and avatars)
        ============================================ */
     const IMAGE_POOL = [
-     j "<div class="card">
-  <h2>Messages reçus</h2>
-  <div class="content photos-grid">
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/LddzfBDR/IMG-7735.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/DfwDm32L/IMG-7736.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/prjHGfwN/IMG-7737.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/SD9LjcCW/IMG-7738.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/XfxhvZj3/IMG-7740.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/fdnLysXV/IMG-7742.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/Psq9T02D/IMG-7745.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/wrWy3p1G/IMG-7746.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/F4rQ6GNj/IMG-7749.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/XZP9z88X/IMG-7795.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/rR8CTSsg/IMG-7796.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/qYPfd2cj/IMG-7797.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/W4HQkWGF/IMG-7798.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/Jjqrb516/IMG-7799.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/KjNL6mKx/IMG-7800.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/fz4Nt82C/IMG-7801.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/MyyY36wW/IMG-7802.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/7dkV2TFD/IMG-7803.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/Xk2tr1SN/IMG-7804.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/G4S56kDk/IMG-7805.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/LzdNDmB5/IMG-7806.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/GfGDRGQC/IMG-7807.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/YT1z6kTT/IMG-7808.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/fzjfwm4h/IMG-7809.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/M51G6rv2/IMG-7810.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/1GcZDBT7/IMG-7811.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/Psdp8JnZ/IMG-7812.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/Gf2wz04t/IMG-7814.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/60H3MT1d/IMG-7816.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/pvJNyMVh/IMG-7817.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/G3BHdCxx/IMG-7818.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/8LW015Qg/IMG-7819.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/XN8tsRF/IMG-7820.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/R138PKW/IMG-7821.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/397bQmQh/IMG-7823.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/848vjXkN/IMG-7824.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/FbQ7fpfV/IMG-7825.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/2YSy5ggr/IMG-7826.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/FbqYsgcZ/IMG-7827.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/LDXYjnTd/IMG-7828.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/N09T7TW/IMG-7829.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/qYjZ94dB/IMG-7830.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/2Yg2FGQz/IMG-7831.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/X1P10P2/IMG-7832.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/FbfSh5kx/IMG-7833.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/HTFMC3RQ/IMG-7834.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/cW15ZWj/IMG-7835.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/Jjj3M6J0/IMG-7836.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/CKFdtNpw/IMG-7837.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/zVcDtdVK/IMG-7838.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/1t4j2SHx/IMG-7839.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/4R94Npcp/IMG-7840.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-    <div class="locked-photo">
-      <img src="https://i.ibb.co/zHZF4Qgc/IMG-7841.jpg" alt="photo">
-      <div class="lock-overlay"><span class="lock-icon">🔒</span></div>
-    </div>
-
-  </div>
-</div>
-
+      "https://i.ibb.co/LddzfBDR/IMG-7735.jpg",
+      "https://i.ibb.co/DfwDm32L/IMG-7736.jpg",
+      "https://i.ibb.co/prjHGfwN/IMG-7737.jpg",
+      "https://i.ibb.co/SD9LjcCW/IMG-7738.jpg",
+      "https://i.ibb.co/XfxhvZj3/IMG-7740.jpg",
+      "https://i.ibb.co/fdnLysXV/IMG-7742.jpg",
+      "https://i.ibb.co/Psq9T02D/IMG-7745.jpg",
+      "https://i.ibb.co/wrWy3p1G/IMG-7746.jpg",
+      "https://i.ibb.co/F4rQ6GNj/IMG-7749.jpg",
+      "https://i.ibb.co/XZP9z88X/IMG-7795.jpg",
+      "https://i.ibb.co/rR8CTSsg/IMG-7796.jpg",
+      "https://i.ibb.co/qYPfd2cj/IMG-7797.jpg",
+      "https://i.ibb.co/W4HQkWGF/IMG-7798.jpg",
+      "https://i.ibb.co/Jjqrb516/IMG-7799.jpg",
+      "https://i.ibb.co/KjNL6mKx/IMG-7800.jpg",
+      "https://i.ibb.co/fz4Nt82C/IMG-7801.jpg",
+      "https://i.ibb.co/MyyY36wW/IMG-7802.jpg",
+      "https://i.ibb.co/7dkV2TFD/IMG-7803.jpg",
+      "https://i.ibb.co/Xk2tr1SN/IMG-7804.jpg",
+      "https://i.ibb.co/G4S56kDk/IMG-7805.jpg",
+      "https://i.ibb.co/LzdNDmB5/IMG-7806.jpg",
+      "https://i.ibb.co/GfGDRGQC/IMG-7807.jpg",
+      "https://i.ibb.co/YT1z6kTT/IMG-7808.jpg",
+      "https://i.ibb.co/fzjfwm4h/IMG-7809.jpg",
+      "https://i.ibb.co/M51G6rv2/IMG-7810.jpg",
+      "https://i.ibb.co/1GcZDBT7/IMG-7811.jpg",
+      "https://i.ibb.co/Psdp8JnZ/IMG-7812.jpg",
+      "https://i.ibb.co/Gf2wz04t/IMG-7814.jpg",
+      "https://i.ibb.co/60H3MT1d/IMG-7816.jpg",
+      "https://i.ibb.co/pvJNyMVh/IMG-7817.jpg",
+      "https://i.ibb.co/G3BHdCxx/IMG-7818.jpg",
+      "https://i.ibb.co/8LW015Qg/IMG-7819.jpg",
+      "https://i.ibb.co/XN8tsRF/IMG-7820.jpg",
+      "https://i.ibb.co/R138PKW/IMG-7821.jpg",
+      "https://i.ibb.co/397bQmQh/IMG-7823.jpg",
+      "https://i.ibb.co/848vjXkN/IMG-7824.jpg",
+      "https://i.ibb.co/FbQ7fpfV/IMG-7825.jpg",
+      "https://i.ibb.co/2YSy5ggr/IMG-7826.jpg",
+      "https://i.ibb.co/FbqYsgcZ/IMG-7827.jpg",
+      "https://i.ibb.co/LDXYjnTd/IMG-7828.jpg",
+      "https://i.ibb.co/N09T7TW/IMG-7829.jpg",
+      "https://i.ibb.co/qYjZ94dB/IMG-7830.jpg",
+      "https://i.ibb.co/2Yg2FGQz/IMG-7831.jpg",
+      "https://i.ibb.co/X1P10P2/IMG-7832.jpg",
+      "https://i.ibb.co/FbfSh5kx/IMG-7833.jpg",
+      "https://i.ibb.co/HTFMC3RQ/IMG-7834.jpg",
+      "https://i.ibb.co/cW15ZWj/IMG-7835.jpg",
+      "https://i.ibb.co/Jjj3M6J0/IMG-7836.jpg",
+      "https://i.ibb.co/CKFdtNpw/IMG-7837.jpg",
+      "https://i.ibb.co/zVcDtdVK/IMG-7838.jpg",
+      "https://i.ibb.co/1t4j2SHx/IMG-7839.jpg",
+      "https://i.ibb.co/4R94Npcp/IMG-7840.jpg",
+      "https://i.ibb.co/zHZF4Qgc/IMG-7841.jpg"
     ];
 
     /* -------------------------
@@ -909,19 +656,27 @@ function getRandomInt(seed, max, offset = 0) {
       if(unlocked) return;
       // open payment link in new tab
       try{ window.open(PAYMENT_URL, '_blank'); }catch(e){}
-      // ne pas modifier le bouton : pas de texte/disabled/opacité
-      unlocked = true;
+      // still simulate the unlock locally after a short delay
+      unlockBtn.textContent = 'Paiement en cours...';
+      unlockBtn.disabled = true;
+      setTimeout(()=>{
+        unlocked = true;
+        unlockBtn.textContent = 'Contenu débloqué ✓';
+        unlockBtn.style.opacity = '0.98';
 
-      // enlever uniquement le flou des stories (images circulaires) + masquer le cadenas
-      document.querySelectorAll('.story-card').forEach(s=>{
-        s.classList.add('unlocked');
-        s.classList.remove('locked');
-        const pad = s.querySelector('.padlock'); if(pad) pad.style.opacity='0';
-        const img = s.querySelector('img'); if(img) img.style.filter='none';
-      });
-
-      // ne pas toucher aux usernames/messages floutés
-      // (aucune suppression de .username-blur / .msg-blur / .blurred)
+        // remove username blur
+        document.querySelectorAll('.username-blur').forEach(el=>{ el.style.filter='none'; el.style.background='transparent'; el.classList.remove('username-blur'); });
+        // remove msg blur
+        document.querySelectorAll('.msg-blur').forEach(el=>{ el.style.filter='none'; el.style.background='transparent'; el.classList.remove('msg-blur'); });
+        // remove general blurred
+        document.querySelectorAll('.blurred').forEach(el=>{ el.style.filter='none'; el.style.background='transparent'; el.classList.remove('blurred'); });
+        // unlock story visuals
+        document.querySelectorAll('.story-card').forEach(s=>{
+          s.classList.add('unlocked');
+          const pad = s.querySelector('.padlock'); if(pad) pad.style.opacity='0';
+          const img = s.querySelector('img'); if(img) img.style.filter='none';
+        });
+      },900);
     });
 
     /* -------------------------
