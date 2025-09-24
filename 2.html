@@ -3,77 +3,93 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="theme-color" content="#040406">
   <title>Instaseen - Analyse</title>
+
+  <!-- Fonts alignées avec la page 1 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@700;800&family=Inter:wght@500;700&display=swap" rel="stylesheet"/>
+
   <style>
     :root{
-      --bg:#000;
-      --gradient:linear-gradient(135deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5);
-      --green:#0f0;
-      --red:#f33;
-      --grey:#444;
+      --bg0:#050409; --bg1:#0a0811;
+      --ink:#ffffff; --mut:#c3c8d6;
+      --card:#0F1013; --stroke:#151720;
+      --ok:#22c55e; --err:#ff4d4d;
+      --ui-grad:linear-gradient(135deg,#4f1fb9 0%, #2a0f5f 45%, #0b0716 100%);
     }
     *{margin:0;padding:0;box-sizing:border-box}
     body{
       font-family:Inter,Arial,sans-serif;
-      background:var(--bg);
-      color:#fff;
+      background:#000;
+      color:var(--ink);
       display:flex;justify-content:center;align-items:center;
-      min-height:100vh;
-      position:relative;
-      overflow:hidden;
+      min-height:100vh; position:relative; overflow:hidden;
     }
 
-    /* === fond sombre avec touches violettes === */
-    .bg{
-      position:absolute;inset:0;overflow:hidden;z-index:0;
-      background:#000;
-    }
-    .circle{
-      position:absolute;border-radius:50%;
-      filter:blur(160px);opacity:0.18;
-      animation:move 24s infinite alternate ease-in-out;
-    }
-    .circle1{width:700px;height:700px;background:#3d0066;top:-250px;left:-250px}
-    .circle2{width:500px;height:500px;background:#4b0082;bottom:-180px;right:-180px;animation-delay:4s}
-    .circle3{width:450px;height:450px;background:#2e003e;top:40%;left:50%;animation-delay:8s}
+    /* fond animé, teintes violettes */
+    .bg{position:absolute;inset:0;overflow:hidden;z-index:0;background:linear-gradient(180deg,var(--bg1),#050409 70%,#000)}
+    .circle{position:absolute;border-radius:50%;filter:blur(160px);opacity:.18;animation:move 24s infinite alternate ease-in-out}
+    .circle1{width:700px;height:700px;background:#1f0b46;top:-250px;left:-250px}
+    .circle2{width:520px;height:520px;background:#120735;bottom:-200px;right:-180px;animation-delay:4s}
+    .circle3{width:460px;height:460px;background:#2a0f5f;top:42%;left:52%;animation-delay:8s}
     @keyframes move{
       0%{transform:translate(0,0) scale(1)}
-      50%{transform:translate(-60px,40px) scale(1.2)}
-      100%{transform:translate(60px,-40px) scale(0.9)}
+      50%{transform:translate(-60px,40px) scale(1.12)}
+      100%{transform:translate(60px,-40px) scale(.96)}
     }
 
     .container{max-width:420px;width:100%;padding:20px;text-align:center;position:relative;z-index:1}
 
-    /* wifi logo */
+    /* wifi logo en dégradé violet */
     .wifi{margin:0 auto 14px;width:60px;height:60px;display:flex;align-items:center;justify-content:center}
-    .wifi svg{fill:url(#grad);width:52px;height:52px;animation:pulse 2s infinite}
-    @keyframes pulse{0%,100%{opacity:.6}50%{opacity:1}}
+    .wifi svg{width:52px;height:52px;animation:pulse 2s infinite}
+    @keyframes pulse{0%,100%{opacity:.7;filter:drop-shadow(0 0 0 rgba(90,45,180,0))}50%{opacity:1;filter:drop-shadow(0 6px 16px rgba(90,45,180,.45))}}
 
-    h1{font-size:22px;margin-bottom:6px;font-weight:800}
-    p.subtitle{color:#aaa;margin-bottom:22px;font-size:14px}
+    h1{font-family:Sora,Inter,Arial,sans-serif;font-size:22px;margin-bottom:6px;font-weight:800;letter-spacing:.2px}
+    p.subtitle{color:var(--mut);margin-bottom:22px;font-size:14px}
 
     /* progression */
-    .progress-bar{height:8px;background:#222;border-radius:6px;overflow:hidden;margin:0 auto 18px;max-width:360px}
-    .progress{height:100%;width:0;background:var(--gradient);transition:width 0.4s ease}
+    .progress-bar{
+      height:8px;background:#141418;border:1px solid var(--stroke);
+      border-radius:8px;overflow:hidden;margin:0 auto 18px;max-width:360px;
+      box-shadow:inset 0 0 0 rgba(0,0,0,0), 0 4px 10px rgba(0,0,0,.4)
+    }
+    .progress{
+      height:100%;width:0;background:var(--ui-grad);
+      transition:width .4s ease; background-size:200% 100%;
+      animation:prog 3s linear infinite
+    }
+    @keyframes prog{0%{background-position:0% 50%}100%{background-position:100% 50%}}
 
-    /* étapes */
+    /* étapes en glass sombre */
     .step{
       border-radius:12px;padding:14px;margin-bottom:12px;
-      background:#111;border:1px solid #222;
-      text-align:left;
-      box-shadow:0 4px 10px rgba(0,0,0,0.5);
-      display:flex;align-items:center;gap:12px;
+      background:var(--card);border:1px solid var(--stroke);
+      text-align:left;box-shadow:0 4px 12px rgba(0,0,0,.5);
+      display:flex;align-items:center;gap:12px;transition:background .25s
     }
+    .step:hover{background:#141418}
     .step-icon{
-      width:22px;height:22px;border-radius:50%;flex-shrink:0;
+      width:22px;height:22px;border-radius:8px;flex-shrink:0;
       display:flex;align-items:center;justify-content:center;
-      font-size:14px;
+      position:relative;font-size:0
     }
-    .step.green .step-icon{background:rgba(0,255,0,0.15);color:var(--green)}
-    .step.red .step-icon{background:rgba(255,0,0,0.15);color:var(--red)}
-    .step.grey .step-icon{background:rgba(255,255,255,0.1);color:#888}
+    .step-icon::before{content:"•";font-size:14px;line-height:1}
+    .step.green .step-icon{background:rgba(34,197,94,.14);color:var(--ok)}
+    .step.green .step-icon::before{content:"✓";font-weight:800}
+    .step.red .step-icon{background:rgba(255,77,77,.14);color:var(--err)}
+    .step.grey .step-icon{background:rgba(255,255,255,.08);color:#8a93a6}
+
     .step-text h3{font-size:15px;margin-bottom:3px}
-    .step-text p{font-size:12px;color:#aaa}
+    .step-text p{font-size:12px;color:#9aa0ad}
+
+    /* accessibilité */
+    @media (prefers-reduced-motion:reduce){
+      .circle,.wifi svg,.progress{animation:none}
+      .progress{transition:none}
+    }
   </style>
 </head>
 <body>
@@ -86,18 +102,16 @@
 
   <div class="container">
     <!-- wifi logo -->
-    <div class="wifi">
-      <svg viewBox="0 0 24 24">
+    <div class="wifi" aria-hidden="true">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Signal">
         <defs>
           <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:#feda75"/>
-            <stop offset="25%" style="stop-color:#fa7e1e"/>
-            <stop offset="50%" style="stop-color:#d62976"/>
-            <stop offset="75%" style="stop-color:#962fbf"/>
-            <stop offset="100%" style="stop-color:#4f5bd5"/>
+            <stop offset="0%"  stop-color="#4f1fb9"/>
+            <stop offset="45%" stop-color="#2a0f5f"/>
+            <stop offset="100%" stop-color="#0b0716"/>
           </linearGradient>
         </defs>
-        <path d="M12 20c1.1 0 2-.9 2-2s-.9-2-2-2-2 
+        <path fill="url(#grad)" d="M12 20c1.1 0 2-.9 2-2s-.9-2-2-2-2 
                  .9-2 2 .9 2 2 2zm6.36-2.64a1 1 0 0 0 
                  1.41 0c.39-.39.39-1.02 0-1.41C17.17 
                  12.34 14.68 11 12 11s-5.17 1.34-7.78 
@@ -120,12 +134,12 @@
     <div class="progress-bar"><div class="progress" id="progress"></div></div>
 
     <!-- étapes -->
-    <div class="step grey"><div class="step-icon">•</div><div class="step-text"><h3>Connexion aux serveurs Instagram...</h3><p>Établissement de la connexion sécurisée</p></div></div>
-    <div class="step grey"><div class="step-icon">•</div><div class="step-text"><h3>Contournement des protections...</h3><p>Bypass des systèmes de sécurité</p></div></div>
-    <div class="step grey"><div class="step-icon">•</div><div class="step-text"><h3>Recherche du profil utilisateur...</h3><p>Localisation et IP approximative</p></div></div>
-    <div class="step grey"><div class="step-icon">•</div><div class="step-text"><h3>Extraction des données privées...</h3><p>Récupération des informations confidentielles</p></div></div>
-    <div class="step grey"><div class="step-icon">•</div><div class="step-text"><h3>Décryptage des informations...</h3><p>Déchiffrement des données sensibles</p></div></div>
-    <div class="step grey"><div class="step-icon">•</div><div class="step-text"><h3>Finalisation...</h3><p>Préparation des résultats</p></div></div>
+    <div class="step grey"><div class="step-icon"></div><div class="step-text"><h3>Connexion aux serveurs Instagram...</h3><p>Établissement de la connexion sécurisée</p></div></div>
+    <div class="step grey"><div class="step-icon"></div><div class="step-text"><h3>Contournement des protections...</h3><p>Bypass des systèmes de sécurité</p></div></div>
+    <div class="step grey"><div class="step-icon"></div><div class="step-text"><h3>Recherche du profil utilisateur...</h3><p>Localisation et IP approximative</p></div></div>
+    <div class="step grey"><div class="step-icon"></div><div class="step-text"><h3>Extraction des données privées...</h3><p>Récupération des informations confidentielles</p></div></div>
+    <div class="step grey"><div class="step-icon"></div><div class="step-text"><h3>Décryptage des informations...</h3><p>Déchiffrement des données sensibles</p></div></div>
+    <div class="step grey"><div class="step-icon"></div><div class="step-text"><h3>Finalisation...</h3><p>Préparation des résultats</p></div></div>
   </div>
 
 <script>
