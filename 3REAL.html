@@ -128,8 +128,8 @@
     .messages{display:flex;flex-direction:column;gap:12px}
     .msg{display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:12px;background:linear-gradient(145deg,#121214,#0b0b0d);border:1px solid rgba(255,255,255,0.02);box-shadow:6px 6px 18px rgba(0,0,0,0.6), -6px -6px 18px rgba(255,255,255,0.01);transition:transform .16s ease}
     .msg:hover{transform:translateY(-6px)}
-    .avatar{width:56px;height:56px;border-radius:50%;overflow:hidden;flex-shrink:0;background:linear-gradient(135deg,#2b2b2b,#0f0f0f);display:grid;place-items:center;box-shadow:inset 0 1px 0 rgba(255,255,255,0.02);position:relative}
-    .avatar img{width:100%;height:100%;object-fit:cover;display:block;filter:blur(6px);transform:scale(1.03)}
+    .avatar{width:56px;height:56px;border-radius:50%;overflow:hidden;flex-shrink:0;background:linear-gradient(135deg,#2b2b2b,#0f0f0f);display:grid;place-items:center;box-shadow:inset 0 1px 0 rgba(255,255,255,0.02)}
+    .avatar img{width:100%;height:100%;object-fit:cover;display:block}
     .msg-main{flex:1;display:flex;flex-direction:column;gap:6px}
     .msg-meta{display:flex;justify-content:space-between;align-items:center;gap:8px}
     .msg-meta .from{font-weight:700;display:flex;align-items:center;gap:8px}
@@ -137,7 +137,7 @@
     .blurred{filter:blur(6px) brightness(0.78);background:linear-gradient(90deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));padding:6px;border-radius:8px;display:inline-block}
     .username-blur{filter:blur(6px) brightness(0.78);background:linear-gradient(90deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));padding:2px 6px;border-radius:6px;display:inline-block}
 
-    /* downloadable-icon (non clickable) under time */
+    /* downloadable-icon (non clickable) under time - only icon now */
     .download-icon {display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);margin-top:6px;user-select:none;opacity:0.95}
     .download-icon svg{width:14px;height:14px;display:block;flex-shrink:0;filter:drop-shadow(0 6px 12px rgba(0,0,0,0.5))}
 
@@ -175,29 +175,147 @@
     }
 
     /* ==============================================================
-       Lock overlay on blurred avatars (Reçu de)
-       - solid black circular lock centered on avatar (non transparent)
-       - sized so blurred edges remain visible
+       LOCKED AVATAR STYLES (added/adjusted)
        ============================================================== */
-    .avatar{position:relative}
-    .avatar .avatar-lock{
-      position:absolute;
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%);
-      width:44px;
-      height:44px;
-      border-radius:50%;
-      background:#000; /* solid black as requested */
-      display:grid;
-      place-items:center;
-      z-index:3;
-      box-shadow:0 10px 24px rgba(0,0,0,0.6);
-      border:2px solid rgba(255,255,255,0.03);
+    .avatar.locked-photo {
+      position: relative;
+      overflow: hidden;
+      border-radius: 50%;
     }
-    .avatar .avatar-lock svg{width:22px;height:22px;display:block;fill:none;stroke:#fff;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-    /* ensure blurred avatar image sits behind the lock visually */
-    .avatar img{display:block;width:100%;height:100%;object-fit:cover}
+    .avatar.locked-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: blur(5px) brightness(0.6); /* soft blur + darken */
+    }
+    .avatar .lock-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.45); /* little black veil */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+    .avatar .lock-icon svg {
+      width: 28px;
+      height: 28px;
+      fill: white;
+      filter: drop-shadow(0 6px 14px rgba(0,0,0,0.55));
+    }
+
+    /* small avatars in follow lists */
+    .avatar-sm {
+      position: relative;
+      overflow: hidden;
+      border-radius: 50%;
+      width:44px;height:44px;
+      flex-shrink:0;
+      background: linear-gradient(135deg,#2b2b2b,#0f0f0f);
+    }
+    .avatar-sm img {
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      filter: blur(4px) brightness(0.7);
+    }
+    .avatar-sm .lock-overlay {
+      position:absolute;
+      inset:0;
+      background: rgba(0,0,0,0.45);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      pointer-events:none;
+    }
+    .avatar-sm .lock-icon svg {
+      width:18px;
+      height:18px;
+      fill:#fff;
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.5));
+    }
+
+    /* ==============================================================
+       FOLLOW LIST STYLES (added)
+       ============================================================== */
+    .follow-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 22px;
+    }
+    .follow-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.015), transparent);
+      border: 1px solid var(--glass);
+      padding: 12px;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.55);
+      position: relative;
+      overflow: visible;
+    }
+    .follow-card h4 { margin-bottom: 8px; color: var(--accent); font-weight:800; }
+    .follow-list {
+      max-height: 360px;
+      overflow: auto;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      padding-right:6px;
+      position:relative;
+    }
+    /* decorative gradient overlay at the bottom to hint "more" */
+    .follow-card .fade-bottom {
+      pointer-events: none;
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: 72px; /* leaves space for the lock CTA */
+      height: 80px;
+      background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,0.75));
+      border-radius: 8px;
+      mix-blend-mode: normal;
+    }
+    .user-row {
+      display:flex;
+      gap:10px;
+      align-items:center;
+      padding:8px;
+      border-radius:10px;
+      background: linear-gradient(145deg,#111,#0b0b0d);
+      border:1px solid rgba(255,255,255,0.02);
+      min-width:0;
+    }
+    .user-meta { display:flex; flex-direction:column; gap:6px; min-width:0; }
+    .display-name { font-weight:700; font-size:14px; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:200px; }
+    .display-name.blur { filter: blur(6px) brightness(0.9); pointer-events:none; user-select:none; }
+    .handle { font-size:13px; color:var(--muted); }
+    .handle.blur { filter: blur(6px) brightness(0.9); pointer-events:none; user-select:none; }
+    .user-meta .bio { font-size:12px; color:rgba(234,242,255,0.42); max-width:220px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; filter: blur(4px); pointer-events:none; user-select:none; }
+
+    .list-lock {
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:center;
+      padding:14px;
+      border-radius:10px;
+      margin-top:10px;
+      background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.55));
+      border:1px dashed rgba(255,255,255,0.04);
+      color:var(--muted);
+      text-align:center;
+    }
+    .list-lock .small-note { font-size:13px; color:var(--muted); }
+    .list-lock .small-cta { margin-left:10px; }
+
+    /* small devices: show lists stacked */
+    @media (max-width:900px) {
+      .follow-section { grid-template-columns: 1fr; }
+      .follow-card { padding-bottom: 72px; }
+    }
+
   </style>
 </head>
 <body>
@@ -308,7 +426,7 @@
       <div class="activity-grid" style="margin-top:12px;display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
         <div style="background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);padding:14px;border-radius:12px;border:1px solid var(--glass)">
           <strong>Connexion</strong>
-          <div style="color:var(--muted);margin-top:6px">Dernière connexion: <strong>25 septembre 2025 • 18:23</strong></div>
+          <div style="color:var(--muted);margin-top:6px">Dernière connexion: <strong>2 juin 2025 • 18:23</strong></div>
           <div style="color:var(--muted);margin-top:10px">IP approximative: 185.XX.XX.XX</div>
         </div>
         <div style="background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);padding:14px;border-radius:12px;border:1px solid var(--glass)">
@@ -323,6 +441,54 @@
     <section class="section" aria-labelledby="recent-searches-title">
       <div class="section-title"><h3 id="recent-searches-title">Recherches récentes</h3></div>
       <div class="search-list" id="recentSearches"><!-- injected --></div>
+    </section>
+
+    <!-- Follow Lists (Abonnés / Abonnements) -->
+    <section class="section" aria-labelledby="follow-title">
+      <div class="section-title">
+        <h3 id="follow-title">Abonnés & Abonnements</h3>
+        <div style="color:var(--muted);font-size:13px">Aperçu — listes partielles</div>
+      </div>
+
+      <div class="follow-section" role="region" aria-label="Abonnés et abonnements">
+        <div class="follow-card" id="followersCard" aria-labelledby="followersTitle">
+          <h4 id="followersTitle">Abonnés</h4>
+          <div class="follow-list" id="followersList" aria-live="polite">
+            <!-- injected follower rows -->
+          </div>
+
+          <div class="fade-bottom" aria-hidden="true"></div>
+
+          <div class="list-lock" id="followersLock">
+            <div>
+              <strong>🔒 Liste partielle</strong>
+              <div class="small-note">Certaines entrées sont masquées — d'autres existent plus bas.</div>
+            </div>
+            <div style="margin-left:auto" class="small-cta">
+              <button id="unlockFollowersBtn" class="pay-btn" style="padding:8px 14px;font-size:13px">Voir plus — 2€</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="follow-card" id="followingCard" aria-labelledby="followingTitle">
+          <h4 id="followingTitle">Abonnements</h4>
+          <div class="follow-list" id="followingList" aria-live="polite">
+            <!-- injected following rows -->
+          </div>
+
+          <div class="fade-bottom" aria-hidden="true"></div>
+
+          <div class="list-lock" id="followingLock">
+            <div>
+              <strong>🔒 Liste partielle</strong>
+              <div class="small-note">Certaines entrées sont masquées — d'autres existent plus bas.</div>
+            </div>
+            <div style="margin-left:auto" class="small-cta">
+              <button id="unlockFollowingBtn" class="pay-btn" style="padding:8px 14px;font-size:13px">Voir plus — 2€</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <footer>Instaseen — Prototype UI · ©️ 2025 · Conception interne ·</footer>
@@ -341,7 +507,6 @@
 
   <script>
     // ------------ Protections anti-copie (JS global) -------------
-    // Empêche menu contextuel, copier/coller/couper, glisser-déposer et raccourcis usuels
     document.addEventListener('contextmenu', e => e.preventDefault(), {capture:true});
     document.addEventListener('copy', e => e.preventDefault(), {capture:true});
     document.addEventListener('cut', e => e.preventDefault(), {capture:true});
@@ -356,40 +521,50 @@
     // -------------------------------------------------------------
 
     // ------------ Deterministic helpers (seeded PRNG) -------------
-/* transforme une chaîne en un entier 32 bits stable */
-function hashCode(str) {
-  let h = 2166136261; // base FNV-1a style
-  for (let i = 0; i < str.length; i++) {
-    h = Math.imul(h ^ str.charCodeAt(i), 16777619);
-  }
-  return (h >>> 0); // unsigned 32-bit
-}
-
-/* petit PRNG déterministe (mulberry32) */
-function mulberry32(a) {
-  return function() {
-    var t = a += 0x6D2B79F5;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-/* renvoie une valeur [0,1) basée sur (seed + offset) */
-function randomFromSeed(seed, offset = 0) {
-  const gen = mulberry32((seed + offset) >>> 0);
-  return gen();
-}
-
-/* renvoie un entier [0, max-1] déterministe à partir du seed */
-function getRandomInt(seed, max, offset = 0) {
-  return Math.floor(randomFromSeed(seed, offset) * max);
-}
-// --------------------------------------------------------------
+    function hashCode(str) {
+      let h = 2166136261;
+      for (let i = 0; i < str.length; i++) {
+        h = Math.imul(h ^ str.charCodeAt(i), 16777619);
+      }
+      return (h >>> 0);
+    }
+    function mulberry32(a) {
+      return function() {
+        var t = a += 0x6D2B79F5;
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+    function randomFromSeed(seed, offset = 0) {
+      const gen = mulberry32((seed + offset) >>> 0);
+      return gen();
+    }
+    function getRandomInt(seed, max, offset = 0) {
+      return Math.floor(randomFromSeed(seed, offset) * max);
+    }
+    function pickDeterministic(arr, count, seed){
+      const copy = arr.slice();
+      const out = [];
+      const s = seed >>> 0;
+      for(let i=0;i<Math.min(count, copy.length); i++){
+        const idx = getRandomInt(s, copy.length, i);
+        out.push(copy.splice(idx,1)[0]);
+      }
+      return out;
+    }
+    function shuffle(arr){
+      const a = arr.slice();
+      for(let i=a.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [a[i],a[j]]=[a[j],a[i]];
+      }
+      return a;
+    }
+    // --------------------------------------------------------------
 
     /* ============================================
-       IMAGE_POOL: exactly the list you provided
-       (we reuse these URLs for stories and avatars)
+       IMAGE_POOL: provided list (used for avatars / stories)
        ============================================ */
     const IMAGE_POOL = [
       "https://i.ibb.co/LddzfBDR/IMG-7735.jpg",
@@ -448,50 +623,13 @@ function getRandomInt(seed, max, offset = 0) {
     ];
 
     /* -------------------------
-       Helpers
-       ------------------------- */
-    function shuffle(arr){
-      const a = arr.slice();
-      for(let i=a.length-1;i>0;i--){
-        const j=Math.floor(Math.random()*(i+1));
-        [a[i],a[j]]=[a[j],a[i]];
-      }
-      return a;
-    }
-
-    function getRandomDistinct(arr, n){
-      if(!Array.isArray(arr) || arr.length===0) return [];
-      if(n>=arr.length) return shuffle(arr);
-      const copy = arr.slice();
-      const out = [];
-      for(let i=0;i<n;i++){
-        const idx=Math.floor(Math.random()*copy.length);
-        out.push(copy.splice(idx,1)[0]);
-      }
-      return out;
-    }
-
-    // Deterministic pick: pick `count` distinct items from arr using seed
-    function pickDeterministic(arr, count, seed){
-      const copy = arr.slice();
-      const out = [];
-      const s = seed >>> 0;
-      for(let i=0;i<Math.min(count, copy.length); i++){
-        const idx = getRandomInt(s, copy.length, i);
-        out.push(copy.splice(idx,1)[0]);
-      }
-      return out;
-    }
-
-    /* -------------------------
-       Sample names & messages (12)
+       Helpers & sample data
        ------------------------- */
     const sampleNames = [
       'arthur_r33','justine_ggn','baptiste.ltd','mariion_gln','nicolas_leveq','guillaume_agn',
       'cloex_x','hugo_trbt','julie_vart','nina_moll','enzoratet','emma.gh',
       'simon_glt','lea_lmo','zo.cst','leandre_dz','maelys_albt','_tristanbds_'
     ];
-
     const sampleTexts = [
       "mdrrr bien vu ?",
       "jte jure c'est trop carrément",
@@ -507,41 +645,40 @@ function getRandomInt(seed, max, offset = 0) {
       "Je valide 👍"
     ];
 
-    // generate deterministic messages based on a seed (so refresh won't change them unless username changes)
     function generateMessages(seed){
       const out = [];
       for(let i=0;i<12;i++){
         const name = sampleNames[i % sampleNames.length];
-        const hour = (getRandomInt(seed, 23, i) + 1) % 24; // deterministic hour
+        const hour = (getRandomInt(seed, 23, i) + 1) % 24;
         const unread = (getRandomInt(seed, 3, i+20) === 0);
         const text = sampleTexts[i % sampleTexts.length];
-        const type = (i % 2 === 0) ? 'friends' : 'others'; // mentions removed
+        const type = (i % 2 === 0) ? 'friends' : 'others';
         out.push({ id:'m'+(3000+i), from: name, time: hour+'h', text, type, unread });
       }
       return out;
     }
 
     /* -------------------------
-       State for image assignment persistence
-       - persist assignments keyed by username
-       - also cache per user+filter to avoid regen on repeated clicks
+       Storage helpers (mappings)
        ------------------------- */
     const STORAGE_USER_KEY = 'instaseen_username';
-    const STORAGE_MAP_KEY = 'instaseen_mappings_v4'; // bumped version
+    const STORAGE_MAP_KEY = 'instaseen_mappings_v5';
+    const FOLLOW_LISTS_KEY = 'instaseen_follow_lists_v1'; // new: persist followers/following per username
 
     function loadMappings(){
       try{ const raw = localStorage.getItem(STORAGE_MAP_KEY); return raw ? JSON.parse(raw) : {}; }catch(e){ return {}; }
     }
-
-    function saveMappings(obj){ try{ localStorage.setItem(STORAGE_MAP_KEY, JSON.stringify(obj)); }catch(e){}
-    }
-
-    function saveUsername(u){ try{ if(u) localStorage.setItem(STORAGE_USER_KEY, u); }catch(e){}
-    }
+    function saveMappings(obj){ try{ localStorage.setItem(STORAGE_MAP_KEY, JSON.stringify(obj)); }catch(e){} }
+    function saveUsername(u){ try{ if(u) localStorage.setItem(STORAGE_USER_KEY, u); }catch(e){} }
     function loadUsername(){ try{ return localStorage.getItem(STORAGE_USER_KEY); }catch(e){ return null; } }
 
+    function loadFollowLists(){
+      try{ const raw = localStorage.getItem(FOLLOW_LISTS_KEY); return raw ? JSON.parse(raw) : {}; }catch(e){ return {}; }
+    }
+    function saveFollowLists(obj){ try{ localStorage.setItem(FOLLOW_LISTS_KEY, JSON.stringify(obj)); }catch(e){} }
+
     /* -------------------------
-       DOM references
+       DOM refs
        ------------------------- */
     const messagesContainer = document.getElementById('messagesContainer');
     const storiesGrid = document.getElementById('storiesGrid');
@@ -549,17 +686,19 @@ function getRandomInt(seed, max, offset = 0) {
     const totalCountEl = document.getElementById('totalCount');
     const listBadgeEl = document.getElementById('listBadge');
 
-    // Global profile pool assigned (either reused from mappings or freshly chosen)
+    const followersListEl = document.getElementById('followersList');
+    const followingListEl = document.getElementById('followingList');
+    const followersLockEl = document.getElementById('followersLock');
+    const followingLockEl = document.getElementById('followingLock');
+    const unlockFollowersBtn = document.getElementById('unlockFollowersBtn');
+    const unlockFollowingBtn = document.getElementById('unlockFollowingBtn');
+
     let PROFILE_POOL = [];
-
-    // per-user+filter cache so images change only once for that filter
-    let perUserFilterCache = {}; // { user: { filter: { profileAssignments, storyPicks } } }
-
-    // track last applied filter to avoid repeated changes on hover
+    let perUserFilterCache = {};
     let lastAppliedFilter = null;
 
     /* -------------------------
-       Render messages with avatars
+       Render functions
        ------------------------- */
     function renderMessages(data, avatarPool){
       messagesContainer.innerHTML = '';
@@ -570,7 +709,7 @@ function getRandomInt(seed, max, offset = 0) {
         row.dataset.id = m.id;
 
         const avatar = document.createElement('div');
-        avatar.className = 'avatar';
+        avatar.className = 'avatar locked-photo';
         const img = document.createElement('img');
         img.src = avatars[idx] || '';
         img.alt = '@'+m.from;
@@ -585,13 +724,11 @@ function getRandomInt(seed, max, offset = 0) {
           }
         };
         avatar.appendChild(img);
-
-        // Add black lock overlay centered on the avatar (non-transparent, large enough to leave blurred edges visible)
-        const lock = document.createElement('div');
-        lock.className = 'avatar-lock';
-        lock.setAttribute('aria-hidden', 'true');
-        lock.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="4" y="10" width="16" height="10" rx="2" stroke="#fff" stroke-width="1.2" fill="none"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="#fff" stroke-width="1.2" fill="none"></path></svg>';
-        avatar.appendChild(lock);
+        const lockOverlay = document.createElement('div');
+        lockOverlay.className = 'lock-overlay';
+        lockOverlay.setAttribute('aria-hidden','true');
+        lockOverlay.innerHTML = '<span class="lock-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm6-7h-1V7a5 5 0 0 0-10 0v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2zm-3 0H9V7a3 3 0 0 1 6 0v3z"/></svg></span>';
+        avatar.appendChild(lockOverlay);
 
         const main = document.createElement('div');
         main.className = 'msg-main';
@@ -609,7 +746,8 @@ function getRandomInt(seed, max, offset = 0) {
         const downloadIcon = document.createElement('div');
         downloadIcon.className = 'download-icon';
         downloadIcon.setAttribute('aria-hidden','true');
-        downloadIcon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 3v12" stroke="#ffffff" stroke-opacity="0.9" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 11l4 4 4-4" stroke="#ffffff" stroke-opacity="0.9" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 21H3" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>télécharger</span>';
+        // only icon, no text
+        downloadIcon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 3v12" stroke="#ffffff" stroke-opacity="0.9" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 11l4 4 4-4" stroke="#ffffff" stroke-opacity="0.9" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 21H3" stroke="#ffffff" stroke-opacity="0.08" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
         timeWrap.appendChild(time);
         timeWrap.appendChild(downloadIcon);
@@ -630,10 +768,6 @@ function getRandomInt(seed, max, offset = 0) {
       listBadgeEl.textContent = data.length;
     }
 
-    /* -------------------------
-       Render stories (4 distinct, locked by default)
-       Uses deterministic picks based on mapping so repeated clicks don't change
-       ------------------------- */
     function renderStories(pool){
       storiesGrid.innerHTML = '';
       const picks = pool.slice(0,4);
@@ -641,7 +775,6 @@ function getRandomInt(seed, max, offset = 0) {
         const card = document.createElement('div');
         card.className = 'story-card locked';
         card.style.animationDelay = (i*60)+'ms';
-
         const img = document.createElement('img');
         img.src = url;
         img.alt = 'Story '+(i+1);
@@ -650,11 +783,9 @@ function getRandomInt(seed, max, offset = 0) {
           if(!img.dataset.tried){ img.dataset.tried='1'; img.src = url; }
           else img.src='';
         };
-
         const pad = document.createElement('div');
         pad.className = 'padlock';
         pad.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><rect x="4" y="10" width="16" height="10" rx="2" fill="none" stroke="#fff" stroke-width="1.2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3" fill="none" stroke="#fff" stroke-width="1.2"></path></svg>';
-
         card.appendChild(img);
         card.appendChild(pad);
         storiesGrid.appendChild(card);
@@ -663,9 +794,6 @@ function getRandomInt(seed, max, offset = 0) {
       return picks;
     }
 
-    /* -------------------------
-       Render recent searches as TEXT (flouté) instead of images
-       ------------------------- */
     function renderSearchesText(list){
       recentSearchesContainer.innerHTML = '';
       const picks = Array.isArray(list) ? list : [];
@@ -678,49 +806,179 @@ function getRandomInt(seed, max, offset = 0) {
     }
 
     /* -------------------------
-       Unlock CTA: opens payment link then unlocks visuals
-       Link provided by user is used (opens in new tab)
+       Follow lists (deterministic per username)
+       - 12 followers, 12 following (between 10-15)
+       - avatars & handles deterministic from username seed
+       - always locked, clicking buttons only opens payment link
        ------------------------- */
+    const SAMPLE_HANDLES = [
+      'leo','mila','cam','axel','lola','thomas','sara','nathan','clara','antoine',
+      'emma','lucas','zoe','max','julie','lara','mathis','paul','anais','marc',
+      'aline','fred','gael','tess','yann','noe','zoe_r','lola.x','nico','eva'
+    ];
+
+    function obfuscateHandle(h){
+      if(!h) return '@****';
+      const name = h.replace(/^@+/, '');
+      if(name.length <= 2) return '@' + name[0] + '*';
+      const keep = 1;
+      const visible = name.slice(0, keep);
+      const stars = '*'.repeat(Math.max(3, name.length - keep));
+      return '@' + (visible + stars);
+    }
+
+    function buildFollowRow(avatarUrl, displayName, handle){
+      const row = document.createElement('div');
+      row.className = 'user-row';
+
+      const av = document.createElement('div');
+      av.className = 'avatar-sm';
+      const img = document.createElement('img');
+      img.src = avatarUrl;
+      img.alt = displayName;
+      img.loading = 'lazy';
+      av.appendChild(img);
+
+      const lock = document.createElement('div');
+      lock.className = 'lock-overlay';
+      lock.innerHTML = '<span class="lock-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm6-7h-1V7a5 5 0 0 0-10 0v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2zm-3 0H9V7a3 3 0 0 1 6 0v3z"/></svg></span>';
+      av.appendChild(lock);
+
+      const meta = document.createElement('div');
+      meta.className = 'user-meta';
+      const dn = document.createElement('div');
+      dn.className = 'display-name blur'; // <-- added blur on display name
+      dn.textContent = displayName;
+      const h = document.createElement('div');
+      h.className = 'handle blur'; // <-- handle already blurred
+      h.textContent = obfuscateHandle(handle);
+      const bio = document.createElement('div');
+      bio.className = 'bio';
+      bio.textContent = 'Photographe • Paris';
+
+      meta.appendChild(dn);
+      meta.appendChild(h);
+      meta.appendChild(bio);
+
+      row.appendChild(av);
+      row.appendChild(meta);
+
+      return row;
+    }
+
+    /**
+     * populateFollowListsForUser:
+     * - Ensures lists are stable across page refreshes by persisting per-username lists
+     * - Regenerates only when there's no saved list for that username (or when updatePseudo forces it)
+     */
+    function populateFollowListsForUser(username, forceRegen = false){
+      username = username || 'demo_follow';
+      const seed = hashCode(username || 'demo_follow');
+
+      // load persisted follow-lists
+      const saved = loadFollowLists() || {};
+      if(!forceRegen && saved[username]){
+        // use persisted lists
+        const followerAvatars = saved[username].followerAvatars.slice();
+        const followingAvatars = saved[username].followingAvatars.slice();
+        const followers = saved[username].followers.slice();
+        const following = saved[username].following.slice();
+
+        followersListEl.innerHTML = '';
+        followingListEl.innerHTML = '';
+
+        for(let i=0;i<followers.length;i++){
+          const row = buildFollowRow(followerAvatars[i % followerAvatars.length], followers[i].display, followers[i].handle);
+          followersListEl.appendChild(row);
+        }
+        for(let i=0;i<following.length;i++){
+          const row = buildFollowRow(followingAvatars[i % followingAvatars.length], following[i].display, following[i].handle);
+          followingListEl.appendChild(row);
+        }
+
+        if(followersLockEl) followersLockEl.style.display = 'flex';
+        if(followingLockEl) followingLockEl.style.display = 'flex';
+        return;
+      }
+
+      // generate deterministic lists and persist them
+      const followerAvatars = pickDeterministic(shuffle(IMAGE_POOL), 12, seed + 101);
+      const followingAvatars = pickDeterministic(shuffle(IMAGE_POOL), 12, seed + 201);
+
+      const followers = [];
+      const following = [];
+      for(let i=0;i<12;i++){
+        const idx1 = getRandomInt(seed, SAMPLE_HANDLES.length, i);
+        const idx2 = getRandomInt(seed, SAMPLE_HANDLES.length, i+50);
+        const h1 = SAMPLE_HANDLES[idx1] + (i%4===0?Math.floor(i/2):'');
+        const h2 = SAMPLE_HANDLES[idx2] + (i%3===0?'_x':'');
+        followers.push({display: capitalize(SAMPLE_HANDLES[idx1]) , handle: h1});
+        following.push({display: capitalize(SAMPLE_HANDLES[idx2] + (i%5===0?'.official':'')) , handle: h2});
+      }
+
+      // persist
+      const allSaved = loadFollowLists() || {};
+      allSaved[username] = {
+        followerAvatars: followerAvatars,
+        followingAvatars: followingAvatars,
+        followers: followers,
+        following: following,
+        createdAt: Date.now()
+      };
+      saveFollowLists(allSaved);
+
+      // render
+      followersListEl.innerHTML = '';
+      followingListEl.innerHTML = '';
+      for(let i=0;i<followers.length;i++){
+        const row = buildFollowRow(followerAvatars[i % followerAvatars.length], followers[i].display, followers[i].handle);
+        followersListEl.appendChild(row);
+      }
+      for(let i=0;i<following.length;i++){
+        const row = buildFollowRow(followingAvatars[i % followingAvatars.length], following[i].display, following[i].handle);
+        followingListEl.appendChild(row);
+      }
+
+      if(followersLockEl) followersLockEl.style.display = 'flex';
+      if(followingLockEl) followingLockEl.style.display = 'flex';
+    }
+
+    function capitalize(s){ if(!s) return s; return s.charAt(0).toUpperCase() + s.slice(1); }
+
+    /* -------------------------
+       Unlock CTA: open payment link but DO NOT unblur anything
+       ------------------------- */
+    const PAYMENT_URL = 'https://flownetwork.g2afse.com/click?pid=4829&offer_id=10232';
     const unlockBtn = document.getElementById('unlockBtn');
     let unlocked = false;
-    const PAYMENT_URL = 'https://flownetwork.g2afse.com/click?pid=4829&offer_id=10232';
     unlockBtn.addEventListener('click', ()=>{
-      if(unlocked) return;
-      // open payment link in new tab
       try{ window.open(PAYMENT_URL, '_blank'); }catch(e){}
-      // ne pas modifier le bouton : pas de texte/disabled/opacité
-      unlocked = true;
+      // intentionally do nothing else (no animation, no unblur)
+      unlockBtn.textContent = 'Paiement...';
+      unlockBtn.disabled = true;
+      setTimeout(()=>{ unlockBtn.textContent = 'Contenu verrouillé 🔒'; unlockBtn.disabled = false; }, 800);
+    });
 
-      // enlever uniquement le flou des stories (images circulaires) + masquer le cadenas
-      document.querySelectorAll('.story-card').forEach(s=>{
-        s.classList.add('unlocked');
-        s.classList.remove('locked');
-        const pad = s.querySelector('.padlock'); if(pad) pad.style.opacity='0';
-        const img = s.querySelector('img'); if(img) img.style.filter='none';
-      });
-
-      // ne pas toucher aux usernames/messages floutés
-      // (aucune suppression de .username-blur / .msg-blur / .blurred)
+    // bottom unlocks for lists - only open link and keep everything locked
+    unlockFollowersBtn.addEventListener('click', ()=>{
+      try{ window.open(PAYMENT_URL, '_blank'); }catch(e){}
+      // keep everything locked - do not change UI
+    });
+    unlockFollowingBtn.addEventListener('click', ()=>{
+      try{ window.open(PAYMENT_URL, '_blank'); }catch(e){}
     });
 
     /* -------------------------
-       Filters behaviour
-       - When filter changes (click or first hover) we change images ONCE for that filter
-       - Uses deterministic picks based on username+filter seed so changes are stable
-       - We cache the mapping per user+filter so repeated clicks won't regenerate
+       Filters & image mapping (same logic as before)
        ------------------------- */
     function applyFilter(filter, userSeed, username){
-      if(filter === lastAppliedFilter) return; // do nothing if same filter
+      if(filter === lastAppliedFilter) return;
       lastAppliedFilter = filter;
-
-      // decide which messages to show
       let data = window.messages.slice();
       if(filter && filter !== 'all'){
         if(filter === 'friends') data = data.filter(m=>m.type === 'friends');
         if(filter === 'unread') data = data.filter(m=>m.unread);
       }
-
-      // check cache for this user+filter
       perUserFilterCache[username] = perUserFilterCache[username] || {};
       if(perUserFilterCache[username][filter]){
         const cached = perUserFilterCache[username][filter];
@@ -729,8 +987,6 @@ function getRandomInt(seed, max, offset = 0) {
         renderStories(cached.storyPicks);
         return;
       }
-
-      // not cached -> create mapping deterministically
       const poolSeed = (userSeed >>> 0) + (filter ? (filter.length*131) : 7);
       const storyPicks = pickDeterministic(shuffle(IMAGE_POOL), 4, poolSeed + 11);
       const poolForProfiles = IMAGE_POOL.filter(url => !storyPicks.includes(url));
@@ -740,9 +996,7 @@ function getRandomInt(seed, max, offset = 0) {
       } else {
         profileAssignments = pickDeterministic(shuffle(IMAGE_POOL), 12, poolSeed + 23);
       }
-
       perUserFilterCache[username][filter] = { storyPicks, profileAssignments };
-
       PROFILE_POOL = profileAssignments.slice();
       renderMessages(data, PROFILE_POOL);
       renderStories(storyPicks);
@@ -757,7 +1011,6 @@ function getRandomInt(seed, max, offset = 0) {
           const f = chip.dataset.filter || 'all';
           applyFilter(f, userSeed, username);
         });
-        // also support hover but only trigger once per filter change
         chip.addEventListener('mouseenter', ()=>{
           const f = chip.dataset.filter || 'all';
           if(f !== lastAppliedFilter){
@@ -770,26 +1023,17 @@ function getRandomInt(seed, max, offset = 0) {
     }
 
     /* -------------------------
-       Initialization & stable-image logic:
-       - mappings are deterministic and tied to username
-       - if username changes, images & messages change
-       - otherwise they remain stable across refreshes
+       Initialization
        ------------------------- */
     document.addEventListener('DOMContentLoaded', ()=>{
-      // Try URL params (?user=...), then fallback to localStorage saved username (from page1), then 'demo'
       const urlUser = (new URLSearchParams(window.location.search)).get('user') || (new URLSearchParams(window.location.search)).get('u');
-      // page1 integration: check localStorage key used by page1 (many pages set 'username')
-      const page1User = localStorage.getItem('username') || null; // this respects integration with page1
-
+      const page1User = localStorage.getItem('username') || null;
       const currentUser = urlUser || page1User || loadUsername() || 'demo';
-      const storedUser = loadUsername();
       let mappings = loadMappings();
 
-      // generate messages deterministically using username seed
       const userSeed = hashCode(currentUser || 'demo');
       window.messages = generateMessages(userSeed);
 
-      // if mappings exist but username changed, we keep per-user cache but regenerate if necessary
       function buildAndSaveMappingsForFilter(username, filter){
         const poolSeed = (hashCode(username||'demo') >>> 0) + (filter ? (filter.length*131) : 7);
         const storyPicks = pickDeterministic(shuffle(IMAGE_POOL), 4, poolSeed + 11);
@@ -803,17 +1047,13 @@ function getRandomInt(seed, max, offset = 0) {
         return { storyPicks, profileAssignments };
       }
 
-      // If there is a stored mapping for this user, reuse it in per-user filter cache for 'all' by default
-      // This ensures images won't change when reloading or clicking filters repeatedly
       if(mappings && mappings[currentUser]){
-        // transfer stored mapping into per-user filter cache for 'all' by default
         perUserFilterCache[currentUser] = perUserFilterCache[currentUser] || {};
         perUserFilterCache[currentUser]['all'] = {
           storyPicks: mappings[currentUser].storyPicks.slice(),
           profileAssignments: mappings[currentUser].profileAssignments.slice()
         };
       } else {
-        // build default mapping (all) and persist
         const defaultMap = buildAndSaveMappingsForFilter(currentUser, 'all');
         mappings = mappings || {};
         mappings[currentUser] = { storyPicks: defaultMap.storyPicks.slice(), profileAssignments: defaultMap.profileAssignments.slice(), createdAt: Date.now(), user: currentUser };
@@ -823,46 +1063,35 @@ function getRandomInt(seed, max, offset = 0) {
         perUserFilterCache[currentUser]['all'] = { storyPicks: defaultMap.storyPicks.slice(), profileAssignments: defaultMap.profileAssignments.slice() };
       }
 
-      // Initialize PROFILE_POOL and render initial content
       PROFILE_POOL = perUserFilterCache[currentUser]['all'].profileAssignments.slice();
       renderStories(perUserFilterCache[currentUser]['all'].storyPicks);
       renderMessages(window.messages, PROFILE_POOL);
 
-      // Now render recent searches as TEXT (flouté)
-      const recentText = [
-        '@gshkgd.34',
-        '@xmpl_89',
-        '@testusr.21',
-        '@hidden_77'
-      ];
+      const recentText = ['@gshkgd.34','@xmpl_89','@testusr.21','@hidden_77'];
       renderSearchesText(recentText);
 
-      // counters
       totalCountEl.textContent = window.messages.length;
       listBadgeEl.textContent = window.messages.length;
 
-      // initialize chips behavior
       initFilterChips(userSeed, currentUser);
 
-      // show header username explicitly from currentUser
       document.getElementById('dashboardTitle').textContent = 'Tableau de bord de @' + (currentUser || 'demo');
 
-      // expose an API for page1 to update the pseudo and propagate changes
+      // populate follow lists deterministically for this user
+      // IMPORTANT: populateFollowListsForUser will read persisted follow lists and only regenerate if missing.
+      populateFollowListsForUser(currentUser);
+
+      // expose updatePseudo (keeps deterministic behavior)
       window.updatePseudo = function(newPseudo){
         try{
           if(!newPseudo) return;
-          // normalize incoming value (allow with or without @)
           const normalized = newPseudo.trim().replace(/^@+/, '');
           const final = normalized ? '@'+normalized : 'demo';
-
-          // persist both in localStorage key used by page1 and our storage
           try{ localStorage.setItem('username', final); }catch(e){}
           saveUsername(final);
 
-          // reset caches for new user only (keep other users' caches)
           lastAppliedFilter = null;
           PROFILE_POOL = [];
-          // ensure mappings exist for this user (will be created deterministically)
           mappings = loadMappings() || {};
           if(!mappings[final]){
             const defaultMap = buildAndSaveMappingsForFilter(final, 'all');
@@ -870,29 +1099,26 @@ function getRandomInt(seed, max, offset = 0) {
             saveMappings(mappings);
           }
 
-          // reload messages seed
           const newSeed = hashCode(final);
           window.messages = generateMessages(newSeed);
 
-          // clear perUserFilterCache for this user so new filters can be generated based on final
           perUserFilterCache[final] = perUserFilterCache[final] || {};
-          // copy default mapping into cache
           perUserFilterCache[final]['all'] = { storyPicks: mappings[final].storyPicks.slice(), profileAssignments: mappings[final].profileAssignments.slice() };
 
-          // render initial view for new user
           PROFILE_POOL = perUserFilterCache[final]['all'].profileAssignments.slice();
           renderStories(perUserFilterCache[final]['all'].storyPicks);
           renderMessages(window.messages, PROFILE_POOL);
 
-          // reset chips UI
           document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
           const allChip = document.querySelector('.chip[data-filter="all"]'); if(allChip) allChip.classList.add('active');
 
-          // re-init chips with new seed
           initFilterChips(newSeed, final);
 
-          // update title
           document.getElementById('dashboardTitle').textContent = 'Tableau de bord de ' + final;
+
+          // regenerate followers/following for the new pseudo (forceRegen true to refresh saved lists)
+          populateFollowListsForUser(final, true);
+
         }catch(err){ console.error('updatePseudo error', err); }
       };
 
@@ -900,6 +1126,7 @@ function getRandomInt(seed, max, offset = 0) {
 
     // accessibility: ESC to close modal
     document.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ document.getElementById('modal').style.display='none'; } });
+
   </script>
 </body>
 </html>
