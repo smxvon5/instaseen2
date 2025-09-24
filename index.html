@@ -1,289 +1,384 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<link rel="icon" href="https://i.ibb.co/6Rvgrxvm/Chat-GPT-Image-23-sept-2025-23-34-27.png?v=2" type="image/png">
+  <link rel="icon" href="https://i.ibb.co/6Rvgrxvm/Chat-GPT-Image-23-sept-2025-23-34-27.png?v=2" type="image/png">
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta name="description" content="Instaseen — Interface mobile. Validation visuelle, design premium. Non affilié à Instagram.">
+  <meta name="theme-color" content="#040406">
   <title>Instaseen</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@700;800&family=Inter:wght@500;700&display=swap" rel="stylesheet"/>
+
   <style>
     :root{
-      --bg:#000;
-      --text-muted:#aaa;
-      --gradient:linear-gradient(135deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5);
-      --card-bg:#111;
+      --bg0:#050409; --bg1:#0a0811;
+      --ink:#ffffff; --mut:#c3c8d6;
+      --card:#0F1013; --ok:#22c55e; --err:#ff4d4d;
+      --ui-grad:linear-gradient(135deg,#4f1fb9 0%, #2a0f5f 45%, #0b0716 100%);
     }
     *{margin:0;padding:0;box-sizing:border-box}
-    body{
-      font-family:Inter,Arial,sans-serif;
-      background:var(--bg);
-      color:#fff;
-      display:flex;justify-content:center;align-items:center;
-      min-height:100vh;
-      position:relative;
-      overflow:hidden;
-      flex-direction:column;
+    html,body{height:100%}
+    body{font-family:Inter,system-ui,Arial,sans-serif;color:var(--ink);background:#000;overflow-y:auto}
+    body::before{
+      content:""; position:fixed; inset:0; z-index:-2;
+      background:
+        radial-gradient(760px 520px at 18% 8%, rgba(24,16,44,.35) 0%, transparent 58%),
+        radial-gradient(700px 520px at 82% 92%, rgba(16,10,30,.34) 0%, transparent 58%),
+        linear-gradient(180deg, var(--bg1), #050409 70%, #000 100%);
     }
+    .bg{position:fixed; inset:0; z-index:-1; pointer-events:none}
+    .glow{position:absolute; border-radius:50%; filter:blur(100px); opacity:.08; mix-blend:screen; animation:float 22s ease-in-out infinite alternate}
+    .g1{width:600px;height:600px;background:#1f0b46;top:-180px;left:-180px}
+    .g2{width:480px;height:480px;background:#120735;right:-140px;bottom:-140px;animation-delay:5s}
+    @keyframes float{0%{transform:translate(0,0) scale(1)}50%{transform:translate(-20px,16px) scale(1.03)}100%{transform:translate(28px,-16px) scale(.985)}}
 
-    /* === BACKGROUND === */
-    .bg{
-      position:absolute;top:0;left:0;width:100%;height:100%;
-      overflow:hidden;z-index:0;
-      background:#000;
-    }
-    .circle{
-      position:absolute;border-radius:50%;
-      filter:blur(160px);opacity:0.18;
-      animation:move 24s infinite alternate ease-in-out;
-    }
-    .circle1{width:700px;height:700px;background:#3d0066;top:-250px;left:-250px}
-    .circle2{width:500px;height:500px;background:#4b0082;bottom:-180px;right:-180px;animation-delay:4s}
-    .circle3{width:450px;height:450px;background:#2e003e;top:40%;left:50%;animation-delay:8s}
-    @keyframes move{
-      0%{transform:translate(0,0) scale(1)}
-      50%{transform:translate(-60px,40px) scale(1.2)}
-      100%{transform:translate(60px,-40px) scale(0.9)}
-    }
+    .page{display:block;width:100%;min-height:100%}
+    .container{width:100%;max-width:440px;margin:0 auto;padding:18px 18px 24px;text-align:center;position:relative;z-index:1}
 
-    /* container */
-    .container{
-      max-width:420px;width:100%;padding:20px;text-align:center;
-      position:relative;z-index:1;
+    /* Logo seul, légèrement plus grand */
+    .hero-logo{
+      width:90%;
+      max-width:230px;
+      margin:10px auto 12px;
+      aspect-ratio:1/1;
+      filter:drop-shadow(0 12px 24px rgba(6,5,12,.55));
     }
+    .wordmark{font-family:Sora,Inter,Arial,sans-serif;font-weight:800;letter-spacing:.3px;font-size:clamp(22px,7vw,28px);color:#fff;text-transform:lowercase;
+      text-shadow:0 2px 0 rgba(255,255,255,.18), 0 8px 18px rgba(20,10,40,.6)}
 
-    /* logo */
-    .logo{
-      width:100px;height:100px;border-radius:24px;
-      margin:0 auto 16px;
-      background:var(--gradient);
-      display:flex;align-items:center;justify-content:center;
-      box-shadow:0 0 30px rgba(0,0,0,0.5);
-    }
-    .logo svg{width:52px;height:52px;fill:#fff}
+    h1{font-size:0;line-height:0;height:0;overflow:hidden}
+    p.subtitle{color:var(--mut);margin-bottom:18px;font-size:clamp(14px,3.6vw,15px)}
 
-    h1{
-      font-size:28px;margin-bottom:8px;font-weight:800;
-      background:var(--gradient);
-      -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-    }
-    p.subtitle{color:var(--text-muted);margin-bottom:28px;font-size:15px}
+    .section{background:var(--card);border-radius:16px;padding:14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;border:1px solid #151720;box-shadow:0 4px 12px rgba(0,0,0,.42);cursor:default;transition:background .25s}
+    .section:hover{background:#141418}
+    .section>span{display:none}
+    .section-icon{width:46px;height:46px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--ui-grad);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.08), inset 0 -12px 22px rgba(0,0,0,.38), 0 10px 26px rgba(16,10,32,.48);position:relative}
+    .section-icon::after{content:"";position:absolute;inset:0;border-radius:14px;background:linear-gradient(to bottom, rgba(255,255,255,.06), transparent 45%)}
+    .section-icon svg{width:24px;height:24px;stroke:#fff;fill:none;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 2px 4px rgba(0,0,0,.45))}
+    .section-text{text-align:left;flex:1;margin-left:12px}
+    .section-text h3{font-size:15px;margin-bottom:3px;font-weight:700}
+    .section-text p{font-size:13px;color:#c3c8d6}
 
-    /* sections */
-    .section{
-      background:var(--card-bg);border-radius:16px;
-      padding:16px;margin-bottom:16px;
-      display:flex;align-items:center;justify-content:space-between;
-      cursor:pointer;transition:0.25s;
-      border:1px solid #222;box-shadow:0 4px 12px rgba(0,0,0,0.4);
-    }
-    .section:hover{background:#1a1a1a;transform:translateY(-2px)}
-    .section-icon{
-      width:50px;height:50px;border-radius:14px;
-      display:flex;align-items:center;justify-content:center;
-      background:var(--gradient);flex-shrink:0;
-      box-shadow:0 0 12px rgba(0,0,0,0.5);
-    }
-    .section-icon svg{width:26px;height:26px;fill:#fff}
-    .section-text{text-align:left;flex:1;margin-left:14px}
-    .section-text h3{font-size:16px;margin-bottom:4px;font-weight:700}
-    .section-text p{font-size:13px;color:var(--text-muted)}
+    input{width:100%;padding:14px;border-radius:12px;border:none;margin:16px 0 8px;background:#111219;color:#fff;text-align:center;font-size:16px;box-shadow:inset 0 0 6px rgba(0,0,0,.6), 0 1px 0 rgba(255,255,255,.05)}
+    input::placeholder{color:#7a7a7a}
+    input:focus{outline:2px solid #39206a}
 
-    /* input */
-    input{
-      width:100%;padding:14px;border-radius:12px;border:none;margin:18px 0 6px;
-      background:#1a1a1a;color:#fff;text-align:center;font-size:15px;
-      box-shadow:inset 0 0 6px rgba(0,0,0,0.6);
-    }
-    input:focus{outline:2px solid #962fbf}
+    .meta{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#9aa0ad;margin-bottom:6px;gap:8px}
+    .counter{font-variant-numeric:tabular-nums}
 
-    /* message d'erreur */
-    .error{
-      color:#ff4d4d;
-      font-size:13px;
-      margin-bottom:10px;
-      height:16px;
-      opacity:0;
-      transform:translateY(6px);
-      transition:all 0.3s ease;
-    }
-    .error.show{
-      opacity:1;
-      transform:translateY(0);
-      animation:shake 0.3s;
-    }
-    @keyframes shake {
-      0% { transform:translateX(0); }
-      25% { transform:translateX(-4px); }
-      50% { transform:translateX(4px); }
-      75% { transform:translateX(-4px); }
-      100% { transform:translateX(0); }
-    }
+    .valid-wrap{height:34px;margin-bottom:8px}
+    .valid-badge{display:inline-flex;align-items:center;gap:8px;justify-content:center;font-size:13px;font-weight:600;color:#d1fae5;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.35);padding:8px 12px;border-radius:999px;opacity:0;transform:scale(.96) translateY(4px);transition:opacity .2s ease, transform .2s ease;margin:0 auto}
+    .valid-badge.show{opacity:1;transform:scale(1) translateY(0)}
+    .spinner{width:14px;height:14px;border-radius:50%;border:2px solid rgba(34,197,94,.25);border-top-color:var(--ok);animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .check{width:16px;height:16px;stroke:var(--ok);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:18;stroke-dashoffset:18}
+    .valid-badge.done .check{animation:dash .35s ease forwards}
+    @keyframes dash{to{stroke-dashoffset:0}}
 
-    /* button */
+    .error{color:var(--err);font-size:13px;margin-bottom:10px;height:16px;opacity:0;transform:translateY(6px);transition:all .3s ease}
+    .error.show{opacity:1;transform:translateY(0);animation:shake .3s}
+    @keyframes shake{0%{transform:translateX(0)}25%{transform:translateX(-4px)}50%{transform:translateX(4px)}75%{transform:translateX(-4px)}100%{transform:translateX(0)}}
+
     .btn{
       width:100%;padding:16px;border:none;border-radius:12px;cursor:pointer;
-      background:var(--gradient);color:#fff;font-weight:800;font-size:16px;
-      transition:0.25s;box-shadow:0 8px 20px rgba(214,41,118,0.4);
+      background:var(--ui-grad);color:#fff;font-weight:800;font-size:16px;
+      transition:opacity .25s, transform .25s; box-shadow:0 12px 26px rgba(45,22,90,.48);
+      touch-action:manipulation; position:relative; overflow:hidden;
+      animation:pulse 3s ease-in-out infinite;
+      margin-bottom:16px;
     }
-    .btn:hover{opacity:0.95;transform:scale(1.01)}
+    .btn:hover{opacity:.96;transform:translateY(-1px)}
+    .btn:active{transform:translateY(0)}
+    .btn::before{
+      content:""; position:absolute; inset:-20% -40%;
+      background:linear-gradient(120deg, rgba(255,255,255,0) 30%, rgba(255,255,255,.55) 50%, rgba(255,255,255,0) 70%);
+      transform:translateX(-120%) rotate(8deg);
+      animation:shine 2.8s linear infinite;
+      pointer-events:none;
+    }
+    @keyframes shine{
+      0%{transform:translateX(-120%) rotate(8deg)}
+      45%{transform:translateX(130%) rotate(8deg)}
+      100%{transform:translateX(130%) rotate(8deg)}
+    }
+    @keyframes pulse{
+      0%,100%{box-shadow:0 12px 26px rgba(45,22,90,.48)}
+      50%{box-shadow:0 14px 34px rgba(90,45,180,.55)}
+    }
 
-    /* === AVIS EN BANDE SOUS LE BOUTON === */
-    .reviews-container{
-      margin-top:14px;
-      position:relative;
-      height:60px;
-      overflow:hidden;
-      width:100%;
+    .notice{margin-top:12px;font-size:12px;color:#8f96a6;display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+    .notice .tag{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px solid #1b1c22;background:#0e0e14}
+    .tag svg{width:14px;height:14px;stroke:#cfd5e6;opacity:.9}
+
+    .reviews-container{margin-top:14px;position:relative;height:60px;overflow:hidden;width:100%}
+    .review{background:#111;border-radius:10px;padding:12px 16px;font-size:14px;color:#ccc;box-shadow:0 2px 8px rgba(0,0,0,.4);opacity:0;transition:all .5s ease;text-align:center;width:100%;position:absolute;left:0;top:0}
+    .review strong{margin-left:8px;color:#fff;font-size:13px}
+    .review.active{opacity:1}
+
+    footer{margin-top:22px;font-size:12px;color:#8f96a6}
+    footer .sep{opacity:.6;margin:0 .35rem}
+    footer .link-like{color:#c9cff0;border-bottom:1px dashed rgba(201,207,240,.35);pointer-events:none;cursor:default}
+
+    @media (max-width:430px){
+      .container{max-width:420px;padding:16px 16px 28px}
+      .section{padding:13px}
+      .section-icon{width:44px;height:44px}
+      .section-text h3{font-size:14.5px}
+      .btn{padding:16px;font-size:17px;border-radius:14px}
     }
-    .review{
-      background:#111;
-      border-radius:10px;
-      padding:12px 16px;
-      font-size:14px;
-      color:#ccc;
-      box-shadow:0 2px 8px rgba(0,0,0,0.4);
-      opacity:0;
-      transition:all 0.5s ease;
-      text-align:center;
-      width:100%;
-      position:absolute;
-      left:0;
-      top:0;
-    }
-    .review strong{
-      margin-left:8px;
-      color:#fff;
-      font-size:13px;
-    }
-    .review.active{
-      opacity:1;
+    @media (prefers-reduced-motion:reduce){
+      .glow{animation:none}
+      .review,.error,.valid-badge{transition:none}
+      .btn{animation:none}
+      .btn::before{animation:none}
     }
   </style>
 </head>
 <body>
-  <!-- fond animé -->
-  <div class="bg">
-    <div class="circle circle1"></div>
-    <div class="circle circle2"></div>
-    <div class="circle circle3"></div>
-  </div>
+  <div class="bg"><div class="glow g1"></div><div class="glow g2"></div></div>
 
-  <div class="container">
-    <!-- logo -->
-    <div class="logo">
-      <!-- LOGO SVG -->
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <path d="M12 4.5C6 4.5 1.73 9 1.73 12S6 19.5 12 19.5 
-                 22.27 15 22.27 12 18 4.5 12 4.5zm0 
-                 12c-2.49 0-4.5-2.01-4.5-4.5S9.51 7.5 
-                 12 7.5 16.5 9.51 16.5 12 14.49 16.5 
-                 12 16.5z"/>
-        <circle cx="12" cy="12" r="2.5"/>
-      </svg>
-    </div>
+  <div class="page">
+    <div class="container">
+      <!-- Logo direct, sans carte -->
+      <div class="hero-logo" aria-hidden="true">
+        <svg viewBox="0 0 240 260" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="vioAura" cx="50%" cy="50%" r="60%">
+              <stop offset="0%" stop-color="rgba(115,76,255,0.30)"/>
+              <stop offset="60%" stop-color="rgba(115,76,255,0.08)"/>
+              <stop offset="100%" stop-color="rgba(115,76,255,0)"/>
+            </radialGradient>
+            <linearGradient id="ring" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#FFFFFF"/>
+              <stop offset="70%" stop-color="#FFFFFF"/>
+              <stop offset="100%" stop-color="#C9B7FF"/>
+            </linearGradient>
+            <filter id="eyeGlow" x="-60%" y="-60%" width="220%" height="220%">
+              <feGaussianBlur stdDeviation="5" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <radialGradient id="iris" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="55%" stop-color="#eef1ff"/>
+              <stop offset="100%" stop-color="#d7ddff"/>
+            </radialGradient>
+          </defs>
 
-    <!-- titre -->
-    <h1>Instaseen</h1>
-    <p class="subtitle">Découvre ce que cache ton partenaire</p>
-
-    <!-- sections -->
-    <div class="section">
-      <div class="section-icon">
-        <!-- Icône Profil -->
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 
-                   2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 
-                   1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/>
+          <circle cx="120" cy="118" r="70" fill="url(#vioAura)"/>
+          <g filter="url(#eyeGlow)">
+            <circle cx="120" cy="118" r="49" fill="rgba(255,255,255,.05)"/>
+            <circle cx="120" cy="116" r="47" fill="none" stroke="url(#ring)" stroke-width="5.6" opacity="1"/>
+            <circle cx="120" cy="116" r="21.5" fill="url(#iris)"/>
+            <circle cx="120" cy="116" r="9.5" fill="#0b0f18" opacity="0.8"/>
+            <circle cx="106" cy="100" r="8.6" fill="#ffffff" opacity="0.98"/>
+            <ellipse cx="138" cy="134" rx="11.5" ry="5.2" fill="#ffffff" opacity="0.16"/>
+          </g>
+          <text x="120" y="246" text-anchor="middle" font-family="Sora, Inter, Arial, sans-serif"
+                font-weight="800" font-size="28" fill="#ffffff"
+                style="paint-order:stroke; stroke:#ffffff; stroke-width:0.6; letter-spacing:.3px;">
+            instaseen
+          </text>
         </svg>
       </div>
-      <div class="section-text">
-        <h3>Profil privé</h3>
-        <p>Accès aux abonnements & abonnés</p>
-      </div>
-      <span>›</span>
-    </div>
 
-    <div class="section">
-      <div class="section-icon">
-        <!-- Icône Stories -->
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="M12 4a8 8 0 100 16 8 8 0 
-                   000-16zm0-2C6.48 2 2 6.48 2 
-                   12s4.48 10 10 10 10-4.48 
-                   10-10S17.52 2 12 2z"/>
-        </svg>
-      </div>
-      <div class="section-text">
-        <h3>Stories & Recherches</h3>
-        <p>Visualisation des contenus cachés</p>
-      </div>
-      <span>›</span>
-    </div>
+      <h1>Instaseen</h1>
+      <p class="subtitle">Découvre ce que cache ton partenaire</p>
 
-    <div class="section">
-      <div class="section-icon">
-        <!-- Icône Messages -->
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-          <path d="M4 4h16v12H5.17L4 17.17V4zm0-2c-1.1 
-                   0-2 .9-2 2v20l4-4h14c1.1 0 2-.9 
-                   2-2V4c0-1.1-.9-2-2-2H4z"/>
-        </svg>
+      <!-- Sections -->
+      <div class="section" aria-hidden="true">
+        <div class="section-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="8" r="4"></circle>
+            <path d="M4.8 20c1.7-3.8 5.6-5.5 7.2-5.5S17.1 16.2 19.2 20"></path>
+          </svg>
+        </div>
+        <div class="section-text">
+          <h3>Profil privé</h3>
+          <p>Accès aux abonnements & abonnés</p>
+        </div>
+        <span></span>
       </div>
-      <div class="section-text">
-        <h3>Messages privés</h3>
-        <p>Voir les discussions confidentielles</p>
+
+      <div class="section" aria-hidden="true">
+        <div class="section-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="7.4"></circle>
+            <path d="M12 8v4l3 2"></path>
+          </svg>
+        </div>
+        <div class="section-text">
+          <h3>Stories & Recherches</h3>
+          <p>Visualisation des contenus cachés</p>
+        </div>
+        <span></span>
       </div>
-      <span>›</span>
-    </div>
 
-    <!-- input -->
-    <input type="text" id="usernameInput" placeholder="Nom d'utilisateur Instagram" minlength="5" maxlength="15" required>
-    <div class="error" id="errorMsg">Le nom d'utilisateur doit contenir entre 5 et 15 caractères.</div>
+      <div class="section" aria-hidden="true">
+        <div class="section-icon">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 6h14a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H10l-4 3v-3H6a2 2 0 0 1-2-2V8a2 2 0 0 1 1-2z"></path>
+          </svg>
+        </div>
+        <div class="section-text">
+          <h3>Messages privés</h3>
+          <p>Voir les discussions confidentielles</p>
+        </div>
+        <span></span>
+      </div>
 
-    <!-- bouton -->
-    <button class="btn" id="startBtn">Commencer</button>
+      <!-- Input -->
+      <input
+        type="text"
+        id="usernameInput"
+        placeholder="Nom d'utilisateur Instagram"
+        minlength="5" maxlength="15"
+        aria-label="Nom d’utilisateur Instagram"
+        inputmode="latin" autocapitalize="off" autocomplete="off" spellcheck="false"
+        pattern="[a-zA-Z0-9._]{5,15}" required
+      >
+      <div class="meta">
+        <span class="hint">Non affilié à Instagram • confidentialité respectée</span>
+        <span class="counter"><span id="cc">0</span>/15</span>
+      </div>
 
-    <!-- AVIS SOUS LE BOUTON -->
-    <div class="reviews-container" id="reviews">
-      <div class="review">⭐⭐⭐⭐⭐ « J'ai trouvé des réponses à mes questions » <strong>– Sarah</strong></div>
-      <div class="review">⭐⭐⭐⭐ « pour une fois que ça marche vraiment mdr » <strong>– Enzo</strong></div>
-      <div class="review">⭐⭐⭐⭐⭐ « Bon il me trompe définitivement à part ça » <strong>– Emma</strong></div>
-      <div class="review">⭐⭐⭐⭐⭐ « Rapide et efficace » <strong>– So'</strong></div>
-      <div class="review">⭐⭐⭐⭐ « je recommande si tu as des doutes » <strong>– Carla</strong></div>
+      <!-- Badge validé -->
+      <div class="valid-wrap">
+        <div class="valid-badge" id="validBadge" aria-live="polite" aria-atomic="true">
+          <span class="spinner" id="vSpin" aria-hidden="true"></span>
+          <svg class="check" id="vCheck" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+          <span id="vText">Vérification…</span>
+        </div>
+      </div>
+
+      <div class="error" id="errorMsg" role="alert" aria-live="assertive">Le nom d'utilisateur doit contenir entre 5 et 15 caractères.</div>
+
+      <button class="btn" id="startBtn">Commencer</button>
+
+      <div class="notice" aria-hidden="true">
+        <span class="tag">
+          <svg viewBox="0 0 24 24"><path d="M12 3l9 4-9 4-9-4 9-4zM3 8l9 4 9-4M5 12l7 3 7-3M7 16l5 2 5-2"/></svg>
+          Données chiffrées
+        </span>
+        <span class="tag">
+          <svg viewBox="0 0 24 24"><path d="M12 1l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-7z"/></svg>
+          4,8/5 avis vérifiés
+        </span>
+        <span class="tag">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V7l-8-4-8 4v5c0 6 8 10 8 10z"/></svg>
+          Sécurité renforcée
+        </span>
+      </div>
+
+      <div class="reviews-container" id="reviews">
+        <div class="review">⭐⭐⭐⭐⭐ « J'ai trouvé des réponses à mes questions » <strong>– Sarah</strong></div>
+        <div class="review">⭐⭐⭐⭐ « pour une fois que ça marche vraiment mdr » <strong>– Enzo</strong></div>
+        <div class="review">⭐⭐⭐⭐⭐ « Bon il me trompe définitivement à part ça » <strong>– Emma</strong></div>
+        <div class="review">⭐⭐⭐⭐⭐ « Rapide et efficace » <strong>– So'</strong></div>
+        <div class="review">⭐⭐⭐⭐ « je recommande si tu as des doutes » <strong>– Carla</strong></div>
+      </div>
+
+      <footer aria-label="Informations">
+        <p>
+          <span class="link-like">Conditions</span>
+          <span class="sep">·</span>
+          <span class="link-like">Confidentialité</span>
+          <span class="sep">·</span>
+          <span class="link-like">Contact</span>
+        </p>
+      </footer>
     </div>
   </div>
 
   <script>
-    // Gestion des avis
+    const input   = document.getElementById("usernameInput");
+    const btn     = document.getElementById("startBtn");
+    const errorMsg= document.getElementById("errorMsg");
+    const cc      = document.getElementById("cc");
+
+    const badge   = document.getElementById("validBadge");
+    const vSpin   = document.getElementById("vSpin");
+    const vCheck  = document.getElementById("vCheck");
+    const vText   = document.getElementById("vText");
+
     const reviews = document.querySelectorAll(".review");
-    let index = 0;
-    function showReview(i){
-      reviews.forEach(r => r.classList.remove("active"));
-      reviews[i].classList.add("active");
-    }
-    function cycleReviews(){
-      showReview(index);
-      index = (index+1) % reviews.length;
-    }
-    cycleReviews();
-    setInterval(cycleReviews, 4000);
 
-    // Gestion du nom utilisateur
-    const input = document.getElementById("usernameInput");
-    const btn = document.getElementById("startBtn");
-    const errorMsg = document.getElementById("errorMsg");
+    const regex = /^[a-zA-Z0-9._]{5,15}$/;
+    let verifyTimeout = null;
 
+    function setBadge(state){
+      if(state === "hidden"){
+        badge.classList.remove("show","done");
+        vSpin.style.display="none";
+        vCheck.style.display="none";
+        vText.textContent="";
+        return;
+      }
+      if(state === "loading"){
+        badge.classList.remove("done");
+        badge.classList.add("show");
+        vSpin.style.display="inline-block";
+        vCheck.style.display="none";
+        vText.textContent="Vérification…";
+        return;
+      }
+      if(state === "done"){
+        badge.classList.add("show","done");
+        vSpin.style.display="none";
+        vCheck.style.display="inline-block";
+        vText.textContent="Validé";
+      }
+    }
+
+    function onInput(){
+      const v = input.value.trim();
+      cc.textContent = v.length;
+      clearTimeout(verifyTimeout);
+
+      if(v.length === 0){
+        errorMsg.classList.remove("show");
+        setBadge("hidden");
+        return;
+      }
+
+      if(regex.test(v)){
+        errorMsg.classList.remove("show");
+        setBadge("loading");
+        verifyTimeout = setTimeout(()=> setBadge("done"), 1650);
+      }else{
+        setBadge("hidden");
+        if(v.length >= 5) errorMsg.classList.add("show");
+        else errorMsg.classList.remove("show");
+      }
+    }
+
+    input.addEventListener("input", onInput);
+
+    // Avis rotatifs
+    let idx = 0;
+    function showReview(i){ reviews.forEach(r=>r.classList.remove("active")); reviews[i].classList.add("active"); }
+    function cycleReviews(){ showReview(idx); idx = (idx+1)%reviews.length; }
+    cycleReviews(); setInterval(cycleReviews, 4000);
+
+    // Bouton
     btn.addEventListener("click", () => {
       const username = input.value.trim();
-      if(username.length >= 5 && username.length <= 15){
-        errorMsg.classList.remove("show");
-        // Enregistre le pseudo dans localStorage
-        localStorage.setItem("username", username);
-        // Redirection vers la page 2
+      if(regex.test(username)){
+        localStorage.setItem("username", username.toLowerCase());
         window.location.href = "2.html";
-      } else {
+      }else{
         errorMsg.classList.add("show");
+        input.animate(
+          [{transform:"translateX(0)"},{transform:"translateX(-4px)"},{transform:"translateX(4px)"},{transform:"translateX(0)"}],
+          {duration:200}
+        );
       }
     });
+
+    input.addEventListener("keydown",(e)=>{ if(e.key==="Enter") btn.click(); });
   </script>
 </body>
 </html>
