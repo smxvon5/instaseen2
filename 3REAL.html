@@ -313,6 +313,34 @@
       .follow-section { grid-template-columns: 1fr; }
       .follow-card { padding-bottom: 72px; }
     }
+    /* Shine pour #remainingBlock */
+.rb-shine{
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(90deg,#1a0b2a 0%, #0b0b0d 50%, #1a0b2a 100%);
+  background-size:200% 100%;
+  animation:rbGradient 6s linear infinite;
+  color:#fff;
+  box-shadow:0 0 24px rgba(126,0,255,0.18);
+}
+.rb-shine::after{
+  content:"";
+  position:absolute; inset:-1px;
+  background:linear-gradient(115deg, transparent 0%, rgba(255,255,255,0.06) 35%, transparent 65%);
+  transform:translateX(-120%);
+  animation:rbSheen 3.5s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes rbGradient{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+@keyframes rbSheen{
+  0%{transform:translateX(-120%)}
+  50%{transform:translateX(120%)}
+  100%{transform:translateX(120%)}
+}
   </style>
 </head>
 <body>
@@ -396,9 +424,16 @@
       </div>
 
       <!-- Bloc “restant” -->
-      <div id="remainingBlock" style="margin-top:18px;padding:16px;border-radius:12px;background:linear-gradient(145deg,#111,#0b0b0d);border:1px solid rgba(255,255,255,0.06);text-align:center;font-size:15px;font-weight:600"></div>
-
-      <div style="margin-top:12px;color:var(--muted);font-size:13px">
+      <div id="remainingBlock" class="rb-shine" style="
+  margin-top:18px;
+  padding:16px;
+  border-radius:12px;
+  text-align:center;
+  font-size:15px;
+  font-weight:600;
+  border:1px solid rgba(255,255,255,0.06);
+"></div>
+     <div style="margin-top:12px;color:var(--muted);font-size:13px">
         <strong>Note :</strong> les aperçus sont volontairement floutés pour protéger la vie privée. Cliquez sur <em>Tout débloquer</em> pour avoir l'accès complet.
       </div>
     </section>
