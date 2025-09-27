@@ -1018,10 +1018,12 @@
        Remaining block (40-60) tied to username seed
        ------------------------- */
     function updateRemaining(username){
-      const seed = hashCode(username || 'demo');
-      const val = 40 + (seed % 21); // 40..60
-      const el = document.getElementById('remainingBlock');
-      if(el) el.textContent = `${val} de conversations restantes, débloquez pour voir le reste`;
+  const seed = hashCode(username || 'demo');
+  const val = 30 + (seed % 36); // 30..65
+  const el = document.getElementById('remainingBlock');
+  if(el) el.textContent = `${val} de conversations restantes, débloquez pour voir le reste`;
+}
+
     }
 
     /* -------------------------
