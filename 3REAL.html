@@ -457,10 +457,43 @@
       </div>
 
       <div class="activity-grid" style="margin-top:12px;display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
-        <div style="background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);padding:14px;border-radius:12px;border:1px solid var(--glass)">
+        <div style="background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);padding:14px;border-radius:12px;border:1px solid var(--glass);position:relative;overflow:hidden">
           <strong>Connexion</strong>
           <div style="color:var(--muted);margin-top:6px">Dernière connexion: <strong></strong> <strong id="liveDate"></strong></div>
-          <div style="color:var(--muted);margin-top:10px">IP approximative: 185.XX.XX.XX</div>
+
+          <!-- Carte factice (maquette Apple Plans) avec épingles — floutée et overlay "Débloquez — 2 €" -->
+          <div style="margin-top:10px;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);height:140px;position:relative;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));">
+            <!-- fond type "carte" sombre -->
+            <div style="position:absolute;inset:0;background:linear-gradient(180deg,#07121b,#0b0b0d);opacity:1;"></div>
+
+            <!-- Épingles factices -->
+            <div style="position:absolute;left:28%;top:28%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;pointer-events:none">
+              <svg width="18" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#ff7a9b"/></svg>
+              <div style="margin-top:6px;color:var(--muted);font-size:12px;background:rgba(0,0,0,0.45);padding:4px 8px;border-radius:8px">ici il y'a 3 heures</div>
+            </div>
+
+            <div style="position:absolute;left:62%;top:64%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;pointer-events:none">
+              <svg width="18" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#f6c85f"/></svg>
+              <div style="margin-top:6px;color:var(--muted);font-size:12px;background:rgba(0,0,0,0.45);padding:4px 8px;border-radius:8px">ici il y'a 5 heures</div>
+            </div>
+
+            <div style="position:absolute;left:72%;top:22%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;pointer-events:none">
+              <svg width="18" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#7de3b6"/></svg>
+              <div style="margin-top:6px;color:var(--muted);font-size:12px;background:rgba(0,0,0,0.45);padding:4px 8px;border-radius:8px">ici il y'a 12 heures</div>
+            </div>
+
+            <div style="position:absolute;left:48%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;pointer-events:none">
+              <svg width="18" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#c9a8ff"/></svg>
+              <div style="margin-top:6px;color:var(--muted);font-size:12px;background:rgba(0,0,0,0.45);padding:4px 8px;border-radius:8px">ici il y'a 2 heures</div>
+            </div>
+
+            <!-- Overlay flouté avec CTA (même lien que le script) -->
+            <div style="position:absolute;inset:0;background:rgba(2,6,23,0.55);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;flex-direction:column;color:#fff;">
+              <div style="font-weight:800;font-size:15px;margin-bottom:8px;">Débloquez — 2 €</div>
+              <a href="https://flownetwork.g2afse.com/click?pid=4829&offer_id=10232" target="_blank" rel="noopener noreferrer" class="pay-btn" style="padding:8px 14px;font-size:14px;border-radius:12px;text-decoration:none;">Payer</a>
+            </div>
+          </div>
+
         </div>
         <div style="background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);padding:14px;border-radius:12px;border:1px solid var(--glass)">
           <strong>Export</strong>
@@ -532,8 +565,8 @@
     <div style="max-width:920px;width:100%;border-radius:12px;overflow:hidden;background:#060607;box-shadow:0 30px 80px rgba(0,0,0,0.8)">
       <div style="position:relative"><img id="modalImg" src="" alt="Aperçu story" style="width:100%;height:auto;display:block;object-fit:contain" /></div>
       <div style="padding:14px 18px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--muted);text-align:center;gap:8px">
-        <div id="modalLabel" style="font-weight:700;color:#fff;font-size:18px"></div>
-        <div><button id="closeModal" class="btn-sm" aria-label="Fermer">Fermer</button></div>
+        <div id="modalLabel" style="font-weight:700
+<div><button id="closeModal" class="btn-sm" aria-label="Fermer">Fermer</button></div>
       </div>
     </div>
   </div>
@@ -715,7 +748,6 @@
       try{ const raw = localStorage.getItem(FOLLOW_LISTS_KEY); return raw ? JSON.parse(raw) : {}; }catch(e){ return {}; }
     }
     function saveFollowLists(obj){ try{ localStorage.setItem(FOLLOW_LISTS_KEY, JSON.stringify(obj)); }catch(e){} }
-
     /* -------------------------
        DOM refs
        ------------------------- */
@@ -912,7 +944,6 @@
 
       return row;
     }
-
     function populateFollowListsForUser(username, forceRegen = false){
       username = username || 'demo_follow';
       const seed = hashCode(username || 'demo_follow');
@@ -1003,7 +1034,6 @@
       if(filter === lastAppliedFilter) return;
       lastAppliedFilter = filter;
       let data = window.messages.slice();
-      // only 'all' kept
       perUserFilterCache[username] = perUserFilterCache[username] || {};
       if(perUserFilterCache[username][filter]){
         const cached = perUserFilterCache[username][filter];
@@ -1049,19 +1079,13 @@
       });
     }
 
-    /* -------------------------
-       Remaining block (40-60) tied to username seed
-       ------------------------- */
     function updateRemaining(username){
-  const seed = hashCode(username || 'demo');
-  const val = 30 + (seed % 36); // 30..65
-  const el = document.getElementById('remainingBlock');
-  if(el) el.textContent = `${val} de conversations restantes, débloquez pour voir le reste`;
+      const seed = hashCode(username || 'demo');
+      const val = 30 + (seed % 36); // 30..65
+      const el = document.getElementById('remainingBlock');
+      if(el) el.textContent = `${val} de conversations restantes, débloquez pour voir le reste`;
     }
 
-    /* -------------------------
-       Live date FR, updates every 45 min
-       ------------------------- */
     function updateLiveDate(){
       if(!liveDateEl) return;
       const d = new Date();
@@ -1070,9 +1094,6 @@
     }
     setInterval(updateLiveDate, 2700000); // 45 min
 
-    /* -------------------------
-       Initialization
-       ------------------------- */
     document.addEventListener('DOMContentLoaded', ()=>{
       const urlUser = (new URLSearchParams(window.location.search)).get('user') || (new URLSearchParams(window.location.search)).get('u');
       const page1User = localStorage.getItem('username') || null;
@@ -1127,11 +1148,9 @@
 
       populateFollowListsForUser(currentUser);
 
-      // Remaining + live date
       updateRemaining(currentUser);
       updateLiveDate();
 
-      // expose updatePseudo so that all mappings change with @
       window.updatePseudo = function(newPseudo){
         try{
           if(!newPseudo) return;
@@ -1156,7 +1175,7 @@
           perUserFilterCache[final]['all'] = { storyPicks: mappings[final].storyPicks.slice(), profileAssignments: mappings[final].profileAssignments.slice() };
 
           PROFILE_POOL = perUserFilterCache[final]['all'].profileAssignments.slice();
-          renderStories(perUserFilterCache[final]['all'].storyPicks);
+          renderStories(perUserFilterCache[final].storyPicks);
           renderMessages(window.messages, PROFILE_POOL);
 
           document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
@@ -1174,7 +1193,6 @@
       };
     });
 
-    // accessibility: ESC to close modal
     document.addEventListener('keydown', (e)=>{ if(e.key==='Escape'){ document.getElementById('modal').style.display='none'; } });
   </script>
 </body>
