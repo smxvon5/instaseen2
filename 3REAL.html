@@ -456,8 +456,10 @@
         <div style="color:var(--muted);font-size:13px">Flux des actions publiques</div>
       </div>
 
-      <div class="activity-grid" style="margin-top:12px;display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
-        <div style="background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);padding:14px;border-radius:12px;border:1px solid var(--glass);position:relative;overflow:hidden">
+      <!-- GRILLE CENTRÉE EN 1 COLONNE -->
+      <div class="activity-grid" style="margin-top:12px;display:grid;grid-template-columns:1fr;gap:12px;justify-items:center">
+        <!-- Seul conteneur conservé & centré -->
+        <div style="background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);padding:14px;border-radius:12px;border:1px solid var(--glass);position:relative;overflow:hidden;justify-self:center;width:min(760px,100%)">
           <strong>Connexion</strong>
           <div style="color:var(--muted);margin-top:6px">Dernière connexion: <strong></strong> <strong id="liveDate"></strong></div>
 
@@ -494,11 +496,6 @@
             </div>
           </div>
 
-        </div>
-        <div style="background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent);padding:14px;border-radius:12px;border:1px solid var(--glass)">
-          <strong>Export</strong>
-          <div style="color:var(--muted);margin-top:6px">Export demandé: <strong>CSV</strong></div>
-          <div style="color:var(--muted);margin-top:10px">État: <span style="color:var(--success)">Terminé.</span></div>
         </div>
       </div>
     </section>
@@ -800,7 +797,7 @@
         const lockOverlay = document.createElement('div');
         lockOverlay.className = 'lock-overlay';
         lockOverlay.setAttribute('aria-hidden','true');
-        lockOverlay.innerHTML = '<span class="lock-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm6-7h-1V7a5 5 0 0 0-10 0v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2zm-3 0H9V7a3 3 0 0 1 6 0v3z"/></svg></span>';
+        lockOverlay.innerHTML = '<span class="lock-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm6-7h-1V7a5 5 0 0 0-10 0v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0 2-2zm-3 0H9V7a3 3 0 0 1 6 0v3z"/></svg></span>';
         avatar.appendChild(lockOverlay);
 
         const main = document.createElement('div');
@@ -920,7 +917,7 @@
 
       const lock = document.createElement('div');
       lock.className = 'lock-overlay';
-      lock.innerHTML = '<span class="lock-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm6-7h-1V7a5 5 0 0 0-10 0v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2zm-3 0H9V7a3 3 0 0 1 6 0v3z"/></svg></span>';
+      lock.innerHTML = '<span class="lock-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm6-7h-1V7a5 5 0 0 0-10 0v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0 2-2zm-3 0H9V7a3 3 0 0 1 6 0v3z"/></svg></span>';
       av.appendChild(lock);
 
       const meta = document.createElement('div');
